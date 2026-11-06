@@ -1,0 +1,684 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}CogCraft Kinetic Sandbox - PlayLab Arcade{% endblock %}
+
+{% block content %}
+<div class="blueprint-sheet min-h-screen py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Breadcrumb / Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div>
+                <div class="flex items-center gap-2 text-xs font-mono text-emerald-400 mb-1">
+                    <a href="{% url 'creations:playlab_hub' %}" class="hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-gamepad"></i> PlayLab
+                    </a>
+                    <span>/</span>
+                    <span class="text-slate-400">Kinetic Toy Simulator</span>
+                </div>
+                <h1 class="text-3xl font-extrabold text-white flex items-center gap-3">
+                    <span>CogCraft: Kinetic Contraption Sandbox</span>
+                    <span class="text-xs font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full">
+                        Interactive Physics 2D
+                    </span>
+                </h1>
+                <p class="text-sm text-slate-300 mt-1">
+                    Engineer custom gravity ramps, bouncing pegs, resonant chimes, and speed boosters. Drop marbles to test kinetic loops!
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                {% if matched_creation %}
+                <a href="{% url 'creations:detail' matched_creation.slug %}" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-purple-500 text-purple-300 text-xs font-semibold flex items-center gap-2 transition-colors">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>Read Full Blueprint</span>
+                </a>
+                {% endif %}
+                <a href="{% url 'creations:home' %}" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold">
+                    Back to Studio
+                </a>
+            </div>
+        </div>
+
+        <!-- Simulator Interface -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            
+            <!-- Controls & Toolbox Sidebar -->
+            <div class="lg:col-span-1 space-y-4">
+                
+                <!-- Tool Selection -->
+                <div class="glass-panel p-5 rounded-2xl border-slate-800">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-purple-400 font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-toolbox"></i>
+                        <span>Maker Toolbox</span>
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <button onclick="setTool('ramp')" id="btn-ramp" class="tool-btn active-tool p-2.5 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-slate-200 bg-slate-800/80 border-purple-500">
+                            <i class="fa-solid fa-slash text-base text-purple-400"></i>
+                            <span class="font-medium">Draw Ramp</span>
+                        </button>
+                        <button onclick="setTool('peg')" id="btn-peg" class="tool-btn p-2.5 rounded-xl border border-slate-800 flex flex-col items-center gap-1.5 transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                            <i class="fa-solid fa-circle-dot text-base text-amber-400"></i>
+                            <span class="font-medium">Bounce Peg</span>
+                        </button>
+                        <button onclick="setTool('chime')" id="btn-chime" class="tool-btn p-2.5 rounded-xl border border-slate-800 flex flex-col items-center gap-1.5 transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                            <i class="fa-solid fa-bell text-base text-emerald-400"></i>
+                            <span class="font-medium">Sound Chime</span>
+                        </button>
+                        <button onclick="setTool('booster')" id="btn-booster" class="tool-btn p-2.5 rounded-xl border border-slate-800 flex flex-col items-center gap-1.5 transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                            <i class="fa-solid fa-forward-fast text-base text-cyan-400"></i>
+                            <span class="font-medium">Booster</span>
+                        </button>
+                        <button onclick="setTool('warp')" id="btn-warp" class="tool-btn p-2.5 rounded-xl border border-slate-800 flex flex-col items-center gap-1.5 transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                            <i class="fa-solid fa-circle-nodes text-base text-fuchsia-400"></i>
+                            <span class="font-medium">Warp Portal</span>
+                        </button>
+                        <button onclick="setTool('erase')" id="btn-erase" class="tool-btn p-2.5 rounded-xl border border-slate-800 flex flex-col items-center gap-1.5 transition-all text-slate-400 hover:text-rose-400 hover:bg-slate-800/50">
+                            <i class="fa-solid fa-eraser text-base text-rose-400"></i>
+                            <span class="font-medium">Eraser</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Simulation Actions -->
+                <div class="glass-panel p-5 rounded-2xl border-slate-800 space-y-3">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-purple-400 font-bold mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Simulation Control</span>
+                    </h3>
+                    
+                    <button onclick="dropBall()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30">
+                        <i class="fa-solid fa-bowling-ball"></i> Drop Steel Ball
+                    </button>
+
+                    <button onclick="toggleDispenser()" id="btn-dispenser" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-2 border border-slate-700">
+                        <i class="fa-solid fa-repeat"></i> Auto-Drop: <span id="dispenser-status">OFF</span>
+                    </button>
+
+                    <div class="pt-2 border-t border-slate-800/80">
+                        <label class="block text-[11px] text-slate-400 font-mono mb-1">Gravity Intensity</label>
+                        <input type="range" id="gravity-slider" min="1" max="20" value="8" class="w-full accent-purple-500 cursor-pointer">
+                        <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+                            <span>Moon (0.1g)</span>
+                            <span>Earth (1.0g)</span>
+                            <span>Jupiter (2.5g)</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-300 font-medium">Acoustic Audio</span>
+                        <input type="checkbox" id="audio-toggle" checked class="accent-emerald-500 w-4 h-4 cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Presets -->
+                <div class="glass-panel p-5 rounded-2xl border-slate-800">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-purple-400 font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>Contraption Presets</span>
+                    </h3>
+                    <div class="space-y-2">
+                        <button onclick="loadPreset('clockwork')" class="w-full text-left p-2 rounded-lg bg-slate-900 hover:bg-purple-950/40 border border-slate-800 hover:border-purple-600 text-xs text-slate-300 hover:text-white transition-colors">
+                            <span class="font-bold text-purple-300 block">The Clockwork Escapement</span>
+                            <span class="text-[10px] text-slate-400">Rhythmic chime drops & twin spirals</span>
+                        </button>
+                        <button onclick="loadPreset('pinball')" class="w-full text-left p-2 rounded-lg bg-slate-900 hover:bg-purple-950/40 border border-slate-800 hover:border-purple-600 text-xs text-slate-300 hover:text-white transition-colors">
+                            <span class="font-bold text-amber-300 block">Galton Pin Pegboard</span>
+                            <span class="text-[10px] text-slate-400">Chaotic bouncing statistical bell curve</span>
+                        </button>
+                        <button onclick="clearCanvas()" class="w-full text-center py-2 rounded-lg border border-rose-900/60 hover:bg-rose-950/30 text-rose-300 text-xs font-semibold transition-colors mt-2">
+                            <i class="fa-solid fa-trash-can mr-1"></i> Clear Workspace
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Arcade Canvas Arena -->
+            <div class="lg:col-span-3">
+                <div class="arcade-frame bg-slate-950 relative shadow-2xl">
+                    <!-- Top HUD -->
+                    <div class="absolute top-3 left-4 right-4 z-10 flex items-center justify-between pointer-events-none">
+                        <div class="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-4 text-xs font-mono text-slate-300">
+                            <div>Balls Active: <span id="ball-count" class="text-emerald-400 font-bold">0</span></div>
+                            <div>Chimes Played: <span id="chime-count" class="text-purple-400 font-bold">0</span></div>
+                        </div>
+                        <div class="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-800 text-[11px] font-mono text-slate-400">
+                            Click & Drag to Draw &bull; Click anywhere to test
+                        </div>
+                    </div>
+
+                    <!-- Canvas -->
+                    <canvas id="physicsCanvas" class="w-full h-[600px] cursor-crosshair block"></canvas>
+                </div>
+
+                <!-- Guidance tip -->
+                <div class="mt-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400 flex items-start gap-3">
+                    <i class="fa-solid fa-circle-question text-purple-400 text-base mt-0.5"></i>
+                    <div>
+                        <strong class="text-slate-200">How to experiment:</strong> Select <span class="text-purple-300 font-semibold">Draw Ramp</span> and drag the mouse on the canvas to form slides. Place <span class="text-emerald-300 font-semibold">Sound Chimes</span> and <span class="text-cyan-300 font-semibold">Boosters</span> along the path. Drop steel balls or turn on <span class="text-amber-300 font-semibold">Auto-Drop</span> to listen to your mechanical acoustic contraption in motion!
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// CogCraft Canvas Physics Engine
+const canvas = document.getElementById('physicsCanvas');
+const ctx = canvas.getContext('2d');
+
+let width, height;
+function resizeCanvas() {
+    width = canvas.parentElement.clientWidth;
+    height = 600;
+    canvas.width = width;
+    canvas.height = height;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Web Audio API Synth for physical sound chimes
+let audioCtx = null;
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+const pentatonicFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+function playChime(freq = 440) {
+    if (!document.getElementById('audio-toggle').checked) return;
+    try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.85);
+        
+        chimesTriggered++;
+        document.getElementById('chime-count').textContent = chimesTriggered;
+    } catch(e) {}
+}
+
+function playBumperClick() {
+    if (!document.getElementById('audio-toggle').checked) return;
+    try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+    } catch(e) {}
+}
+
+// State
+let currentTool = 'ramp';
+let balls = [];
+let lines = [];
+let pegs = [];
+let chimes = [];
+let boosters = [];
+let warps = [];
+let chimesTriggered = 0;
+let isDrawing = false;
+let startX = 0, startY = 0;
+let currentX = 0, currentY = 0;
+let dispenserInterval = null;
+
+function setTool(tool) {
+    currentTool = tool;
+    document.querySelectorAll('.tool-btn').forEach(b => {
+        b.classList.remove('active-tool', 'border-purple-500', 'bg-slate-800/80', 'text-slate-200');
+        b.classList.add('border-slate-800', 'text-slate-400');
+    });
+    const activeBtn = document.getElementById(`btn-${tool}`);
+    if (activeBtn) {
+        activeBtn.classList.add('active-tool', 'border-purple-500', 'bg-slate-800/80', 'text-slate-200');
+        activeBtn.classList.remove('border-slate-800', 'text-slate-400');
+    }
+}
+
+// Mouse events
+canvas.addEventListener('mousedown', (e) => {
+    initAudio();
+    const rect = canvas.getBoundingClientRect();
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
+    isDrawing = true;
+    currentX = startX;
+    currentY = startY;
+
+    if (currentTool === 'peg') {
+        pegs.push({ x: startX, y: startY, r: 10 });
+        playBumperClick();
+    } else if (currentTool === 'chime') {
+        const randFreq = pentatonicFreqs[Math.floor(Math.random() * pentatonicFreqs.length)];
+        chimes.push({ x: startX, y: startY, r: 14, freq: randFreq, pulse: 0 });
+        playChime(randFreq);
+    } else if (currentTool === 'booster') {
+        boosters.push({ x: startX, y: startY, w: 40, h: 20 });
+    } else if (currentTool === 'warp') {
+        if (warps.length % 2 === 0) {
+            warps.push({ x: startX, y: startY, r: 16, target: null, color: '#ec4899' });
+        } else {
+            const prev = warps[warps.length - 1];
+            const next = { x: startX, y: startY, r: 16, target: prev, color: '#06b6d4' };
+            prev.target = next;
+            warps.push(next);
+        }
+    } else if (currentTool === 'erase') {
+        eraseAt(startX, startY);
+    }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    currentX = e.clientX - rect.left;
+    currentY = e.clientY - rect.top;
+
+    if (currentTool === 'erase') {
+        eraseAt(currentX, currentY);
+    }
+});
+
+window.addEventListener('mouseup', () => {
+    if (isDrawing && currentTool === 'ramp') {
+        const dist = Math.hypot(currentX - startX, currentY - startY);
+        if (dist > 15) {
+            lines.push({ x1: startX, y1: startY, x2: currentX, y2: currentY });
+        }
+    }
+    isDrawing = false;
+});
+
+function eraseAt(x, y) {
+    const radius = 25;
+    lines = lines.filter(l => {
+        const d = distToSegment({ x, y }, { x: l.x1, y: l.y1 }, { x: l.x2, y: l.y2 });
+        return d > radius;
+    });
+    pegs = pegs.filter(p => Math.hypot(p.x - x, p.y - y) > radius);
+    chimes = chimes.filter(c => Math.hypot(c.x - x, c.y - y) > radius);
+    boosters = boosters.filter(b => Math.hypot(b.x - x, b.y - y) > radius);
+    warps = warps.filter(w => Math.hypot(w.x - x, w.y - y) > radius);
+}
+
+function dropBall(customX = 100, customY = 20) {
+    balls.push({
+        x: customX,
+        y: customY,
+        vx: (Math.random() - 0.5) * 2,
+        vy: Math.random() * 2,
+        r: 8,
+        color: '#e2e8f0',
+        tail: []
+    });
+    if (balls.length > 50) balls.shift();
+}
+
+function toggleDispenser() {
+    const btn = document.getElementById('dispenser-status');
+    if (dispenserInterval) {
+        clearInterval(dispenserInterval);
+        dispenserInterval = null;
+        btn.textContent = 'OFF';
+        btn.parentElement.classList.remove('bg-emerald-950', 'border-emerald-600', 'text-emerald-300');
+    } else {
+        dispenserInterval = setInterval(() => {
+            dropBall(width * 0.2 + Math.random() * 40, 20);
+        }, 1200);
+        btn.textContent = 'ON';
+        btn.parentElement.classList.add('bg-emerald-950', 'border-emerald-600', 'text-emerald-300');
+    }
+}
+
+function clearCanvas() {
+    balls = [];
+    lines = [];
+    pegs = [];
+    chimes = [];
+    boosters = [];
+    warps = [];
+    chimesTriggered = 0;
+    document.getElementById('chime-count').textContent = '0';
+}
+
+function loadPreset(name) {
+    clearCanvas();
+    if (name === 'clockwork') {
+        // Build stepped zigzag ramps with chimes
+        lines.push({ x1: 50, y1: 100, x2: 450, y2: 180 });
+        chimes.push({ x: 300, y: 140, r: 14, freq: 329.63, pulse: 0 });
+        
+        lines.push({ x1: 500, y1: 240, x2: 120, y2: 320 });
+        chimes.push({ x: 260, y: 290, r: 14, freq: 392.00, pulse: 0 });
+
+        lines.push({ x1: 80, y1: 380, x2: 480, y2: 460 });
+        chimes.push({ x: 400, y: 430, r: 14, freq: 523.25, pulse: 0 });
+
+        // Speed booster at bottom sending it into portal
+        boosters.push({ x: 500, y: 470, w: 50, h: 20 });
+        
+        // Portals looping back
+        const p1 = { x: 560, y: 470, r: 18, color: '#ec4899', target: null };
+        const p2 = { x: 80, y: 70, r: 18, color: '#06b6d4', target: p1 };
+        p1.target = p2;
+        warps.push(p1, p2);
+
+        pegs.push({ x: 470, y: 160, r: 10 });
+        pegs.push({ x: 100, y: 300, r: 10 });
+
+        dropBall(80, 70);
+    } else if (name === 'pinball') {
+        // Galton board matrix
+        const startX = width / 2;
+        const rows = 6;
+        for (let r = 0; r < rows; r++) {
+            const count = r + 1;
+            const y = 140 + r * 50;
+            const xOffset = startX - (r * 35);
+            for (let c = 0; c < count; c++) {
+                const x = xOffset + c * 70;
+                if (r % 2 === 0 && c % 2 === 0) {
+                    chimes.push({ x, y, r: 12, freq: pentatonicFreqs[(r + c) % pentatonicFreqs.length], pulse: 0 });
+                } else {
+                    pegs.push({ x, y, r: 9 });
+                }
+            }
+        }
+        lines.push({ x1: startX - 80, y1: 70, x2: startX - 20, y2: 120 });
+        lines.push({ x1: startX + 80, y1: 70, x2: startX + 20, y2: 120 });
+        
+        dropBall(startX, 40);
+        dropBall(startX - 5, 35);
+        dropBall(startX + 5, 35);
+    }
+}
+
+// Distance helper
+function sqr(x) { return x * x; }
+function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y); }
+function distToSegmentSquared(p, v, w) {
+    const l2 = dist2(v, w);
+    if (l2 === 0) return dist2(p, v);
+    let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+    t = Math.max(0, Math.min(1, t));
+    return dist2(p, { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) });
+}
+function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
+
+// Simulation loop
+function update() {
+    const gravityVal = parseFloat(document.getElementById('gravity-slider').value) * 0.035;
+
+    for (let i = balls.length - 1; i >= 0; i--) {
+        const b = balls[i];
+        b.vy += gravityVal;
+        b.x += b.vx;
+        b.y += b.vy;
+
+        // Tail trail
+        b.tail.push({ x: b.x, y: b.y });
+        if (b.tail.length > 8) b.tail.shift();
+
+        // Bounce against floor and canvas edges
+        if (b.x < b.r) { b.x = b.r; b.vx *= -0.7; }
+        if (b.x > width - b.r) { b.x = width - b.r; b.vx *= -0.7; }
+        if (b.y > height - b.r) {
+            b.y = height - b.r;
+            b.vy *= -0.6;
+            b.vx *= 0.95;
+            if (Math.abs(b.vy) < 0.2 && Math.abs(b.vx) < 0.2) {
+                // remove dead ball after a while
+                balls.splice(i, 1);
+                continue;
+            }
+        }
+
+        // Collision with lines / ramps
+        for (const l of lines) {
+            const p1 = { x: l.x1, y: l.y1 };
+            const p2 = { x: l.x2, y: l.y2 };
+            const d = distToSegment(b, p1, p2);
+            if (d < b.r + 3) {
+                // Compute line normal
+                const dx = p2.x - p1.x;
+                const dy = p2.y - p1.y;
+                const len = Math.hypot(dx, dy);
+                if (len > 0) {
+                    const nx = -dy / len;
+                    const ny = dx / len;
+                    
+                    // Reflect velocity
+                    const dot = b.vx * nx + b.vy * ny;
+                    b.vx -= 1.8 * dot * nx;
+                    b.vy -= 1.8 * dot * ny;
+                    b.vx *= 0.98;
+                    b.vy *= 0.98;
+
+                    // Push ball outside surface
+                    b.x += nx * (b.r + 3 - d);
+                    b.y += ny * (b.r + 3 - d);
+                }
+            }
+        }
+
+        // Collision with pegs
+        for (const peg of pegs) {
+            const dx = b.x - peg.x;
+            const dy = b.y - peg.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < b.r + peg.r) {
+                const nx = dx / dist;
+                const ny = dy / dist;
+                const dot = b.vx * nx + b.vy * ny;
+                b.vx = (b.vx - 2 * dot * nx) * 1.05;
+                b.vy = (b.vy - 2 * dot * ny) * 1.05;
+                b.x = peg.x + nx * (b.r + peg.r + 1);
+                b.y = peg.y + ny * (b.r + peg.r + 1);
+                playBumperClick();
+            }
+        }
+
+        // Collision with chimes
+        for (const chime of chimes) {
+            const dx = b.x - chime.x;
+            const dy = b.y - chime.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < b.r + chime.r) {
+                const nx = dx / dist;
+                const ny = dy / dist;
+                b.vx = (b.vx - 1.8 * (b.vx * nx + b.vy * ny) * nx);
+                b.vy = (b.vy - 1.8 * (b.vx * nx + b.vy * ny) * ny);
+                b.x = chime.x + nx * (b.r + chime.r + 1);
+                b.y = chime.y + ny * (b.r + chime.r + 1);
+                chime.pulse = 1.0;
+                playChime(chime.freq);
+            }
+        }
+
+        // Collision with boosters
+        for (const boost of boosters) {
+            if (b.x > boost.x - boost.w/2 && b.x < boost.x + boost.w/2 &&
+                b.y > boost.y - boost.h/2 && b.y < boost.y + boost.h/2) {
+                b.vx += 3.5;
+                b.vy -= 2.0;
+            }
+        }
+
+        // Collision with portals
+        for (const warp of warps) {
+            if (warp.target && Math.hypot(b.x - warp.x, b.y - warp.y) < b.r + warp.r) {
+                b.x = warp.target.x + 10;
+                b.y = warp.target.y + 10;
+                b.vx *= 1.2;
+                b.vy *= 1.2;
+                playChime(659.25);
+                break;
+            }
+        }
+    }
+
+    document.getElementById('ball-count').textContent = balls.length;
+}
+
+// Render loop
+function render() {
+    ctx.clearRect(0, 0, width, height);
+
+    // Draw background grid lines faintly
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < width; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+    }
+    for (let y = 0; y < height; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+    }
+
+    // Draw lines / ramps
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    for (const l of lines) {
+        ctx.beginPath();
+        ctx.moveTo(l.x1, l.y1);
+        ctx.lineTo(l.x2, l.y2);
+        ctx.stroke();
+
+        // Little rail supports
+        ctx.fillStyle = '#6b21a8';
+        ctx.beginPath();
+        ctx.arc(l.x1, l.y1, 4, 0, Math.PI * 2);
+        ctx.arc(l.x2, l.y2, 4, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Draw pegs
+    for (const peg of pegs) {
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(peg.x, peg.y, peg.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#d97706';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Draw chimes
+    for (const chime of chimes) {
+        if (chime.pulse > 0) {
+            ctx.strokeStyle = `rgba(16, 185, 129, ${chime.pulse})`;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(chime.x, chime.y, chime.r + (1.0 - chime.pulse) * 20, 0, Math.PI * 2);
+            ctx.stroke();
+            chime.pulse -= 0.04;
+        }
+
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(chime.x, chime.y, chime.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#064e3b';
+        ctx.beginPath();
+        ctx.arc(chime.x, chime.y, chime.r - 4, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Draw boosters
+    for (const boost of boosters) {
+        ctx.fillStyle = 'rgba(6, 182, 212, 0.4)';
+        ctx.fillRect(boost.x - boost.w/2, boost.y - boost.h/2, boost.w, boost.h);
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(boost.x - boost.w/2, boost.y - boost.h/2, boost.w, boost.h);
+        ctx.fillStyle = '#67e8f9';
+        ctx.font = '10px monospace';
+        ctx.fillText('>>>', boost.x - 10, boost.y + 4);
+    }
+
+    // Draw portals
+    for (const warp of warps) {
+        ctx.strokeStyle = warp.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(warp.x, warp.y, warp.r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = warp.color + '44';
+        ctx.fill();
+    }
+
+    // Draw active drawing line
+    if (isDrawing && currentTool === 'ramp') {
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.6)';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([6, 6]);
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(currentX, currentY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Draw balls with glow & tails
+    for (const b of balls) {
+        // Trail
+        for (let t = 0; t < b.tail.length; t++) {
+            const alpha = (t / b.tail.length) * 0.3;
+            ctx.fillStyle = `rgba(226, 232, 240, ${alpha})`;
+            ctx.beginPath();
+            ctx.arc(b.tail[t].x, b.tail[t].y, b.r * (t / b.tail.length), 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Metallic ball
+        const grad = ctx.createRadialGradient(b.x - 2, b.y - 2, 1, b.x, b.y, b.r);
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.6, '#cbd5e1');
+        grad.addColorStop(1, '#475569');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+
+    update();
+    requestAnimationFrame(render);
+}
+
+// Initial default preset load
+loadPreset('clockwork');
+render();
+</script>
+{% endblock %}

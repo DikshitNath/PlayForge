@@ -1,0 +1,360 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ creation.title }} - PlayForge Blueprint{% endblock %}
+
+{% block content %}
+<div class="blueprint-grid min-h-screen py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Breadcrumb & Navigation -->
+        <div class="flex items-center justify-between mb-6 text-xs font-mono text-slate-400">
+            <div class="flex items-center gap-2">
+                <a href="{% url 'creations:home' %}" class="hover:text-purple-400 flex items-center gap-1">
+                    <i class="fa-solid fa-shapes"></i> Blueprints
+                </a>
+                <span>/</span>
+                <span class="text-purple-400">{{ creation.category.name }}</span>
+                <span>/</span>
+                <span class="text-slate-300 truncate max-w-xs">{{ creation.title }}</span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <a href="{% url 'creations:print_blueprint' creation.slug %}" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-500 text-slate-200 text-xs flex items-center gap-1.5 transition-colors">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print Blueprint</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Hero Dossier Banner -->
+        <div class="rounded-3xl overflow-hidden glass-panel border-slate-800/80 mb-8 shadow-2xl">
+            <div class="h-44 sm:h-52 bg-gradient-to-r {{ creation.banner_color }} p-6 sm:p-8 relative flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 bg-black/35 backdrop-blur-[2px]"></div>
+                <!-- Large decorative icon -->
+                <div class="absolute right-6 -bottom-6 text-9xl text-white/10 pointer-events-none">
+                    <i class="fa-solid fa-{{ creation.category.icon }}"></i>
+                </div>
+
+                <!-- Top row metadata -->
+                <div class="relative z-10 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-black/50 backdrop-blur-md text-xs font-bold text-white border border-white/20 flex items-center gap-1.5">
+                            <i class="fa-solid fa-{{ creation.category.icon }}"></i>
+                            {{ creation.category.name }}
+                        </span>
+                        <span class="px-3 py-1 rounded-lg bg-white/20 backdrop-blur-md text-xs font-mono font-bold text-white uppercase">
+                            {{ creation.get_creation_type_display }}
+                        </span>
+                        {% if creation.badge_tag %}
+                        <span class="px-3 py-1 rounded-lg bg-amber-500/30 text-amber-200 border border-amber-400/30 text-xs font-mono font-semibold">
+                            <i class="fa-solid fa-certificate mr-1 text-[10px]"></i> {{ creation.badge_tag }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="px-3 py-1 rounded-lg bg-black/50 backdrop-blur-md text-xs font-bold text-amber-300 border border-amber-400/30 flex items-center gap-1.5">
+                            <i class="fa-solid fa-star text-amber-400"></i>
+                            <span>{{ creation.average_rating }} / 5.0 Rating</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Title & Inventor -->
+                <div class="relative z-10">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight mb-2">
+                        {{ creation.title }}
+                    </h1>
+                    <p class="text-sm sm:text-base text-slate-200 font-medium max-w-2xl">
+                        {{ creation.tagline }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Meta Quick Strip -->
+            <div class="p-6 bg-slate-950/80 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 text-xs font-mono">
+                <div>
+                    <span class="block text-slate-400 text-[10px] uppercase">Inventor</span>
+                    <span class="text-slate-200 font-semibold truncate block">{{ creation.creator_name }}</span>
+                </div>
+                <div>
+                    <span class="block text-slate-400 text-[10px] uppercase">Age Suitability</span>
+                    <span class="text-slate-200 font-semibold">{{ creation.target_age_min }} - {{ creation.target_age_max }} yrs</span>
+                </div>
+                <div>
+                    <span class="block text-slate-400 text-[10px] uppercase">Player Scale</span>
+                    <span class="text-slate-200 font-semibold">{{ creation.player_count_min }} - {{ creation.player_count_max }} Players</span>
+                </div>
+                <div>
+                    <span class="block text-slate-400 text-[10px] uppercase">Session / Build</span>
+                    <span class="text-slate-200 font-semibold">{{ creation.play_time_minutes }} mins</span>
+                </div>
+                <div>
+                    <span class="block text-slate-400 text-[10px] uppercase">Maker Level</span>
+                    <span class="text-slate-200 font-semibold">{{ creation.get_difficulty_display }}</span>
+                </div>
+                <div>
+                    <span class="block text-slate-400 text-[10px] uppercase">Views</span>
+                    <span class="text-purple-400 font-semibold">{{ creation.views_count }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Body: 2 Columns -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left 2 Cols: Blueprint Dossier -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Novelty Factor Highlight -->
+                <div class="p-6 rounded-2xl bg-gradient-to-r from-purple-950/50 via-slate-900 to-indigo-950/50 border border-purple-500/30 shadow-xl">
+                    <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-bold mb-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>The Novelty Factor &bull; Why It's Truly Unique</span>
+                    </div>
+                    <p class="text-base text-slate-100 font-medium leading-relaxed italic">
+                        "{{ creation.novelty_factor }}"
+                    </p>
+                </div>
+
+                <!-- Deep Concept & Mechanics -->
+                <div class="glass-panel p-6 sm:p-8 rounded-2xl border-slate-800 space-y-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-purple-400"></i>
+                        <span>Concept Overview & Lore</span>
+                    </h2>
+                    <div class="text-slate-300 text-sm leading-relaxed space-y-3 whitespace-pre-line">
+                        {{ creation.description }}
+                    </div>
+
+                    <!-- STEM Disciplines -->
+                    <div class="pt-4 border-t border-slate-800">
+                        <span class="text-xs font-mono uppercase text-slate-400 font-bold block mb-2">
+                            <i class="fa-solid fa-atom text-cyan-400 mr-1"></i> Core STEM Disciplines Explored:
+                        </span>
+                        <div class="flex flex-wrap gap-2">
+                            {% for stem in creation.stem_fields.split %}
+                            <span class="px-2.5 py-1 rounded-lg bg-cyan-950/40 border border-cyan-800/50 text-cyan-300 text-xs font-mono font-medium">
+                                {{ stem|cut:"," }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Rules & Build Instructions -->
+                <div class="glass-panel p-6 sm:p-8 rounded-2xl border-slate-800 space-y-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-400"></i>
+                        <span>Rules of Play & Assembly Instructions</span>
+                    </h2>
+                    <div class="bg-slate-950/70 p-5 rounded-xl border border-slate-800 text-sm text-slate-200 leading-relaxed font-sans whitespace-pre-line">
+                        {{ creation.rules_or_instructions }}
+                    </div>
+                </div>
+
+                <!-- Playtesting Reviews & Log -->
+                <div class="glass-panel p-6 sm:p-8 rounded-2xl border-slate-800 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-comments text-amber-400"></i>
+                            <span>Playtest Logs & Community Hacks</span>
+                            <span class="text-xs font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">
+                                {{ reviews|length }}
+                            </span>
+                        </h2>
+                    </div>
+
+                    <!-- Reviews List -->
+                    {% if reviews %}
+                    <div class="space-y-4">
+                        {% for r in reviews %}
+                        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800 text-sm space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="font-bold text-white flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-full bg-purple-900/60 border border-purple-600 flex items-center justify-center text-xs text-purple-300">
+                                        {{ r.reviewer_name|slice:":1" }}
+                                    </div>
+                                    <span>{{ r.reviewer_name }}</span>
+                                </div>
+                                <div class="flex items-center gap-1 text-xs text-amber-400">
+                                    {% for i in "12345" %}
+                                    <i class="fa-solid fa-star text-[11px]"></i>
+                                    {% endfor %}
+                                    <span class="text-slate-400 text-[11px] ml-1">{{ r.created_at|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-slate-300 leading-relaxed">
+                                {{ r.comment }}
+                            </p>
+
+                            {% if r.maker_mod_idea %}
+                            <div class="p-3 rounded-lg bg-purple-950/30 border border-purple-800/30 text-xs text-purple-200 mt-2">
+                                <strong class="text-amber-400 font-mono uppercase text-[10px] block mb-0.5">
+                                    <i class="fa-solid fa-lightbulb mr-1"></i> Maker Hack / Mod Suggestion:
+                                </strong>
+                                {{ r.maker_mod_idea }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-sm text-slate-400 italic">No playtest reviews logged yet. Be the first to build/play and record feedback!</p>
+                    {% endif %}
+
+                    <!-- Add Review Form -->
+                    <div class="pt-6 border-t border-slate-800">
+                        <h3 class="text-base font-bold text-white mb-3">Submit Your Playtest Log</h3>
+                        <form method="POST" class="space-y-3">
+                            {% csrf_token %}
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Playtester Name / Team</label>
+                                {{ review_form.reviewer_name }}
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                                <div>
+                                    <label class="block text-[11px] font-mono text-slate-400 mb-1">Overall Rating</label>
+                                    {{ review_form.rating_overall }}
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-mono text-slate-400 mb-1">Fun Factor</label>
+                                    {{ review_form.rating_fun }}
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-mono text-slate-400 mb-1">Originality</label>
+                                    {{ review_form.rating_originality }}
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-mono text-slate-400 mb-1">STEM Value</label>
+                                    {{ review_form.rating_stem_value }}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Playtest Observations & Feedback</label>
+                                {{ review_form.comment }}
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">DIY Hack / Modification Idea (Optional)</label>
+                                {{ review_form.maker_mod_idea }}
+                            </div>
+                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs transition-colors">
+                                Record Playtest Report
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right 1 Col: Maker Action Center & Bill of Materials -->
+            <div class="space-y-6">
+                
+                <!-- Action Card: PlayLab or Sparks -->
+                <div class="glass-panel p-6 rounded-2xl border-slate-800 text-center space-y-4">
+                    {% if creation.prototype_type == 'MARBLE_RUN' %}
+                    <a href="{% url 'creations:playlab_simulator' 'marble-run' %}" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-amber-950/50">
+                        <i class="fa-solid fa-gamepad text-base"></i>
+                        <span>Launch Physics Prototype</span>
+                    </a>
+                    {% elif creation.prototype_type == 'CHROMA_TILES' %}
+                    <a href="{% url 'creations:playlab_simulator' 'chroma-tiles' %}" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-indigo-950/50">
+                        <i class="fa-solid fa-gamepad text-base"></i>
+                        <span>Play Strategy Board Game</span>
+                    </a>
+                    {% elif creation.prototype_type == 'KINETIC_GEARS' %}
+                    <a href="{% url 'creations:playlab_simulator' 'kinetic-gears' %}" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-cyan-950/50">
+                        <i class="fa-solid fa-cogs text-base"></i>
+                        <span>Launch Kinematics Lab</span>
+                    </a>
+                    {% endif %}
+
+                    <!-- Spark Upvote Button -->
+                    <button onclick="sparkCreation('{{ creation.slug }}', this)" 
+                            class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-400 text-slate-200 hover:text-amber-300 font-bold text-sm flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-bolt text-amber-400 text-base"></i>
+                        <span>Ignite a Spark (<span class="spark-count font-mono">{{ creation.sparks_count }}</span>)</span>
+                    </button>
+
+                    <a href="{% url 'creations:print_blueprint' creation.slug %}" target="_blank" class="w-full py-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Printable Maker Sheet</span>
+                    </a>
+                </div>
+
+                <!-- Materials & Fabrication Checklist -->
+                <div class="glass-panel p-6 rounded-2xl border-slate-800 space-y-4">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2 text-purple-400">
+                        <i class="fa-solid fa-cubes-stacked"></i>
+                        <span>Bill of Materials</span>
+                    </h3>
+                    
+                    <p class="text-xs text-slate-400">Check off components as you gather them for fabrication:</p>
+
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        {% for mat in creation.materials_list %}
+                        <li class="flex items-start gap-2.5 p-2 rounded-lg bg-slate-900/40 border border-slate-800/80">
+                            <input type="checkbox" class="mt-0.5 accent-purple-500 rounded cursor-pointer">
+                            <span class="leading-relaxed">{{ mat }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% if creation.tools_required %}
+                    <div class="pt-3 border-t border-slate-800">
+                        <span class="text-[11px] font-mono text-slate-400 uppercase font-bold block mb-1">
+                            <i class="fa-solid fa-wrench mr-1 text-amber-400"></i> Tools Needed:
+                        </span>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            {{ creation.tools_required }}
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Safety & Advisories -->
+                <div class="p-5 rounded-2xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-2">
+                    <div class="flex items-center gap-1.5 text-rose-400 font-bold font-mono uppercase tracking-wider">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Safety Advisories</span>
+                    </div>
+                    <p class="text-rose-200/90 leading-relaxed">
+                        {{ creation.safety_advisories }}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+async function sparkCreation(slug, button) {
+    try {
+        const response = await fetch(`/creations/${slug}/spark/?format=json`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        if (response.ok) {
+            const data = await response.json();
+            const countSpan = button.querySelector('.spark-count');
+            countSpan.textContent = data.sparks_count;
+            if (data.sparked) {
+                button.classList.add('border-amber-400', 'text-amber-300');
+            } else {
+                button.classList.remove('border-amber-400', 'text-amber-300');
+            }
+        }
+    } catch (err) {
+        console.error("Failed to spark", err);
+    }
+}
+</script>
+{% endblock %}

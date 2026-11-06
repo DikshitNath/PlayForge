@@ -1,0 +1,413 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}GearSmith Kinematic Lab - PlayLab Arcade{% endblock %}
+
+{% block content %}
+<div class="blueprint-sheet min-h-screen py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div>
+                <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-1">
+                    <a href="{% url 'creations:playlab_hub' %}" class="hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-gamepad"></i> PlayLab
+                    </a>
+                    <span>/</span>
+                    <span class="text-slate-400">Mechanical Automaton Simulator</span>
+                </div>
+                <h1 class="text-3xl font-extrabold text-white flex items-center gap-3">
+                    <span>GearSmith: Kinematics & Automata Lab</span>
+                    <span class="text-xs font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2.5 py-1 rounded-full">
+                        Interactive Four-Bar Linkage & Gears
+                    </span>
+                </h1>
+                <p class="text-sm text-slate-300 mt-1">
+                    Design compound gear ratios, eccentric cams, and kinematic linkage rods to drive organic biomimetic puppets.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                {% if matched_creation %}
+                <a href="{% url 'creations:detail' matched_creation.slug %}" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-purple-500 text-purple-300 text-xs font-semibold flex items-center gap-2 transition-colors">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>Read Full Blueprint</span>
+                </a>
+                {% endif %}
+                <a href="{% url 'creations:home' %}" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold">
+                    Back to Studio
+                </a>
+            </div>
+        </div>
+
+        <!-- Simulator Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            
+            <!-- Controls Sidebar -->
+            <div class="lg:col-span-1 space-y-4">
+                
+                <!-- Speed & Motor -->
+                <div class="glass-panel p-5 rounded-2xl border-slate-800">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <span>Drive Mechanism</span>
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                <span>Crank RPM</span>
+                                <span id="rpm-display" class="font-mono text-cyan-400 font-bold">40 RPM</span>
+                            </div>
+                            <input type="range" id="speed-slider" min="0" max="100" value="40" class="w-full accent-cyan-400 cursor-pointer">
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+                            <span class="text-xs text-slate-300">Rotation Direction</span>
+                            <button onclick="toggleDirection()" id="dir-btn" class="px-3 py-1 rounded-lg bg-slate-800 text-xs font-mono text-slate-200 border border-slate-700">
+                                ↻ Clockwise
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Automaton Silhouette Selector -->
+                <div class="glass-panel p-5 rounded-2xl border-slate-800">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-dragon"></i>
+                        <span>Automaton Puppet</span>
+                    </h3>
+                    <div class="space-y-2 text-xs">
+                        <button onclick="setPuppet('bird')" id="btn-bird" class="puppet-btn active-puppet w-full text-left p-3 rounded-xl border border-cyan-500 bg-cyan-950/40 text-cyan-200 flex items-center gap-2.5 transition-all">
+                            <i class="fa-solid fa-dove text-base text-cyan-400"></i>
+                            <div>
+                                <span class="font-bold block">Flapping Ornithopter</span>
+                                <span class="text-[10px] text-slate-400">Harmonic dual-wing rocker linkage</span>
+                            </div>
+                        </button>
+
+                        <button onclick="setPuppet('manta')" id="btn-manta" class="puppet-btn w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 text-slate-300 hover:border-slate-700 flex items-center gap-2.5 transition-all">
+                            <i class="fa-solid fa-water text-base text-indigo-400"></i>
+                            <div>
+                                <span class="font-bold block">Biomimetic Manta Ray</span>
+                                <span class="text-[10px] text-slate-400">Multi-joint undulating wave spine</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Engineering Telemetry -->
+                <div class="glass-panel p-5 rounded-2xl border-slate-800 text-xs font-mono space-y-2">
+                    <h3 class="text-xs uppercase tracking-wider text-cyan-400 font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span>Kinematic Telemetry</span>
+                    </h3>
+                    <div class="flex justify-between py-1 border-b border-slate-800/60">
+                        <span class="text-slate-400">Drive Gear:</span>
+                        <span class="text-white">24 Teeth</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-slate-800/60">
+                        <span class="text-slate-400">Follower Gear:</span>
+                        <span class="text-white">48 Teeth (2:1 Red.)</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-slate-800/60">
+                        <span class="text-slate-400">Linkage Type:</span>
+                        <span class="text-emerald-400">Grashof Crank-Rocker</span>
+                    </div>
+                    <div class="flex justify-between py-1">
+                        <span class="text-slate-400">Harmonic Stroke:</span>
+                        <span class="text-cyan-300" id="stroke-display">±38° Oscillation</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Kinematics Canvas -->
+            <div class="lg:col-span-3">
+                <div class="arcade-frame bg-slate-950 relative shadow-2xl">
+                    <canvas id="gearCanvas" class="w-full h-[600px] block"></canvas>
+                </div>
+
+                <div class="mt-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400 flex items-start gap-3">
+                    <i class="fa-solid fa-cogs text-cyan-400 text-base mt-0.5"></i>
+                    <div>
+                        <strong class="text-slate-200">How it works:</strong> The primary crank drives the large central gear (24T meshed to 48T). 
+                        An eccentric cam converts rotational velocity into sinusoidal back-and-forth movement, propelling the rocker arms and four-bar linkages of the mechanical automaton puppet.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// GearSmith Kinematics Canvas Engine
+const canvas = document.getElementById('gearCanvas');
+const ctx = canvas.getContext('2d');
+
+let width, height;
+function resize() {
+    width = canvas.parentElement.clientWidth;
+    height = 600;
+    canvas.width = width;
+    canvas.height = height;
+}
+resize();
+window.addEventListener('resize', resize);
+
+let angle = 0;
+let direction = 1; // 1 or -1
+let activePuppet = 'bird';
+
+function toggleDirection() {
+    direction *= -1;
+    document.getElementById('dir-btn').textContent = (direction === 1) ? '↻ Clockwise' : '↺ Counter-CW';
+}
+
+function setPuppet(puppet) {
+    activePuppet = puppet;
+    document.querySelectorAll('.puppet-btn').forEach(b => {
+        b.classList.remove('active-puppet', 'border-cyan-500', 'bg-cyan-950/40', 'text-cyan-200');
+        b.classList.add('border-slate-800', 'bg-slate-900/40', 'text-slate-300');
+    });
+    const btn = (puppet === 'bird') ? document.getElementById('btn-bird') : document.getElementById('btn-manta');
+    btn.classList.add('active-puppet', 'border-cyan-500', 'bg-cyan-950/40', 'text-cyan-200');
+}
+
+function drawGear(cx, cy, radius, teeth, rotation, color = '#38bdf8', fillColor = '#0f172a') {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rotation);
+
+    ctx.beginPath();
+    const toothDepth = radius * 0.14;
+    const innerRadius = radius - toothDepth;
+
+    for (let i = 0; i < teeth; i++) {
+        const a1 = (i / teeth) * Math.PI * 2;
+        const a2 = ((i + 0.3) / teeth) * Math.PI * 2;
+        const a3 = ((i + 0.6) / teeth) * Math.PI * 2;
+        const a4 = ((i + 0.9) / teeth) * Math.PI * 2;
+
+        if (i === 0) {
+            ctx.moveTo(Math.cos(a1) * innerRadius, Math.sin(a1) * innerRadius);
+        } else {
+            ctx.lineTo(Math.cos(a1) * innerRadius, Math.sin(a1) * innerRadius);
+        }
+        ctx.lineTo(Math.cos(a2) * radius, Math.sin(a2) * radius);
+        ctx.lineTo(Math.cos(a3) * radius, Math.sin(a3) * radius);
+        ctx.lineTo(Math.cos(a4) * innerRadius, Math.sin(a4) * innerRadius);
+    }
+    ctx.closePath();
+
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Central hub & spoke holes
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.25, 0, Math.PI * 2);
+    ctx.fillStyle = '#1e293b';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.stroke();
+
+    for (let s = 0; s < 4; s++) {
+        const sa = (s / 4) * Math.PI * 2;
+        const sx = Math.cos(sa) * (radius * 0.55);
+        const sy = Math.sin(sa) * (radius * 0.55);
+        ctx.beginPath();
+        ctx.arc(sx, sy, radius * 0.12, 0, Math.PI * 2);
+        ctx.fillStyle = '#090d16';
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+function render() {
+    ctx.clearRect(0, 0, width, height);
+
+    const speed = parseFloat(document.getElementById('speed-slider').value) * 0.001;
+    document.getElementById('rpm-display').textContent = `${Math.round(speed * 1000)} RPM`;
+    angle += speed * direction;
+
+    // Layout coordinates
+    const gear1X = width * 0.28;
+    const gear1Y = height * 0.68;
+    const r1 = 65;
+    const t1 = 24;
+
+    const gear2X = gear1X + r1 + 95;
+    const gear2Y = gear1Y - 10;
+    const r2 = 105;
+    const t2 = 48;
+
+    // Background Chassis Plate
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
+    ctx.strokeStyle = 'rgba(51, 65, 85, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.fillRect(gear1X - 100, gear1Y - 140, 360, 240);
+    ctx.strokeRect(gear1X - 100, gear1Y - 140, 360, 240);
+
+    // Draw Gears
+    drawGear(gear1X, gear1Y, r1, t1, angle, '#06b6d4', '#082f49');
+    drawGear(gear2X, gear2Y, r2, t2, -angle * (t1 / t2) + 0.1, '#8b5cf6', '#2e1065');
+
+    // Crank handle on gear 1
+    const crankX = gear1X + Math.cos(angle) * (r1 * 0.6);
+    const crankY = gear1Y + Math.sin(angle) * (r1 * 0.6);
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.arc(crankX, crankY, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Eccentric cam pin on gear 2
+    const camAngle = -angle * (t1 / t2);
+    const camPinX = gear2X + Math.cos(camAngle) * 45;
+    const camPinY = gear2Y + Math.sin(camAngle) * 45;
+
+    ctx.fillStyle = '#10b981';
+    ctx.beginPath();
+    ctx.arc(camPinX, camPinY, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Upper puppet pivot position
+    const puppetBaseX = width * 0.55;
+    const puppetBaseY = height * 0.22;
+
+    // Linkage connecting pushrod
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(camPinX, camPinY);
+    ctx.lineTo(puppetBaseX, puppetBaseY + 60);
+    ctx.stroke();
+
+    // Draw Linkage Pivot pins
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(camPinX, camPinY, 4, 0, Math.PI * 2);
+    ctx.arc(puppetBaseX, puppetBaseY + 60, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw Puppet Automaton on top
+    const strokeOscillation = Math.sin(camAngle) * 0.55;
+
+    ctx.save();
+    ctx.translate(puppetBaseX, puppetBaseY);
+
+    if (activePuppet === 'bird') {
+        // Wooden bird automaton body
+        ctx.fillStyle = '#d97706';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 24, 40, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Bird head & beak
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.arc(0, -42, 14, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.moveTo(0, -46);
+        ctx.lineTo(16, -40);
+        ctx.lineTo(0, -34);
+        ctx.fill();
+
+        // Articulated Wings (Left & Right)
+        const wingAngle = strokeOscillation * 1.1;
+
+        // Left Wing
+        ctx.save();
+        ctx.translate(-16, -10);
+        ctx.rotate(-wingAngle);
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(-70, -20, -110, 10);
+        ctx.quadraticCurveTo(-60, 30, 0, 10);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#78350f';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+        // Right Wing
+        ctx.save();
+        ctx.translate(16, -10);
+        ctx.rotate(wingAngle);
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(70, -20, 110, 10);
+        ctx.quadraticCurveTo(60, 30, 0, 10);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#78350f';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+    } else if (activePuppet === 'manta') {
+        // Manta Ray with wave deformation
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 30, 60, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Left Fin Wave
+        ctx.save();
+        ctx.translate(-24, 0);
+        ctx.rotate(-strokeOscillation * 0.8);
+        ctx.fillStyle = '#0284c7';
+        ctx.beginPath();
+        ctx.moveTo(0, -20);
+        ctx.quadraticCurveTo(-90, 0, -120, 30);
+        ctx.quadraticCurveTo(-60, 40, 0, 20);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // Right Fin Wave
+        ctx.save();
+        ctx.translate(24, 0);
+        ctx.rotate(strokeOscillation * 0.8);
+        ctx.fillStyle = '#0284c7';
+        ctx.beginPath();
+        ctx.moveTo(0, -20);
+        ctx.quadraticCurveTo(90, 0, 120, 30);
+        ctx.quadraticCurveTo(60, 40, 0, 20);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // Tail
+        ctx.strokeStyle = '#0284c7';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(0, 50);
+        ctx.quadraticCurveTo(Math.sin(angle * 2) * 20, 100, Math.sin(angle * 2) * 10, 140);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+    requestAnimationFrame(render);
+}
+
+render();
+</script>
+{% endblock %}
