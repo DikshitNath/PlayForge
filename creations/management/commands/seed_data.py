@@ -233,7 +233,7 @@ class Command(BaseCommand):
                 ),
                 'safety_advisories': "Ultrasonic waves are above human hearing range, but keep away from household pets sensitive to high frequencies.",
                 'stem_fields': "Acoustic Levitation, Standing Waves, Wave Interference, Resonance",
-                'prototype_type': 'NONE',
+                'prototype_type': 'RESONANCE_LAB',
                 'banner_color': 'from-emerald-500 to-teal-700',
                 'badge_tag': 'Acoustic Physics Wonder',
                 'sparks_count': 97,
