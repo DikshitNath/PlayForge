@@ -1,138 +1,123 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}PlayLab Arcade - Interactive Toy & Game Simulators{% endblock %}
+{% block title %}PlayLab Virtual Arcade &bull; PlayForge{% endblock %}
 
 {% block content %}
-<div class="blueprint-grid min-h-screen py-12">
+<div class="bg-grid-pattern min-h-screen py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
-        <div class="text-center max-w-3xl mx-auto mb-12">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-3">
-                <i class="fa-solid fa-gamepad text-emerald-400"></i>
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-4">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>Interactive Prototyping Laboratory</span>
             </div>
-            <h1 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-4">
-                The PlayLab <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Virtual Arcade</span>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
+                The PlayLab <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Virtual Arcade</span>
             </h1>
-            <p class="text-slate-300 text-base leading-relaxed">
-                Test concepts before you fabricate them! Our interactive in-browser simulators allow toy and game inventors to explore mechanical kinetics, optical ray tracing, and gear kinematics in real time.
+            <p class="text-slate-400 text-base leading-relaxed">
+                Test kinetic physics, optical ray-tracing, and mechanism ratios directly in the browser before fabricating physical hardware.
             </p>
         </div>
 
         <!-- Arcade Game Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
             
             <!-- Prototype 1: Marble Contraptions -->
-            <div class="glass-panel glass-panel-hover rounded-3xl overflow-hidden border-slate-800 flex flex-col transition-all duration-300 hover:-translate-y-2">
-                <div class="h-44 bg-gradient-to-tr from-amber-600 via-rose-600 to-orange-500 p-6 relative flex flex-col justify-between overflow-hidden">
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <div class="absolute -right-4 -bottom-4 text-8xl text-white/10 pointer-events-none">
-                        <i class="fa-solid fa-shapes"></i>
-                    </div>
-                    <div class="relative z-10 flex items-center justify-between">
-                        <span class="px-2.5 py-1 rounded-lg bg-black/50 text-[11px] font-mono font-bold text-amber-200 border border-amber-400/30">
+            <div class="pro-card p-6 flex flex-col justify-between group">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="badge-chip badge-amber font-mono text-[11px]">
                             2D Physics Engine
                         </span>
-                        <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                     </div>
-                    <div class="relative z-10">
-                        <span class="text-xs uppercase font-mono tracking-wider text-amber-200 font-bold">Kinetic Toy</span>
-                        <h3 class="text-2xl font-black text-white">CogCraft Marble Run</h3>
+
+                    <h3 class="text-2xl font-bold text-white group-hover:text-amber-400 transition-colors tracking-tight mb-1">
+                        CogCraft Marble Run
+                    </h3>
+                    <p class="text-xs font-mono text-slate-400 mb-4">Kinetic Contraption Sandbox</p>
+
+                    <p class="text-xs text-slate-300 leading-relaxed mb-6 font-normal">
+                        Draw custom gravity ramps, place bouncing pegs, resonant acoustic sound chimes (synthesized via Web Audio API), speed boosters, and warp portals to compose kinetic chain loops.
+                    </p>
+
+                    <div class="flex flex-wrap gap-1.5 mb-6 text-[10px] font-mono text-slate-400">
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Physics Sandbox</span>
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Acoustic Synth</span>
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Custom Tracks</span>
                     </div>
                 </div>
 
-                <div class="p-6 flex-grow flex flex-col justify-between">
-                    <div>
-                        <p class="text-sm text-slate-300 mb-4 leading-relaxed">
-                            Draw ramps, place resonant brass acoustic chimes, bouncing pegs, gravity diverters, and acceleration boosters. Drop steel marbles and compose acoustic kinetic loops.
-                        </p>
-                        <div class="flex flex-wrap gap-1.5 mb-6 text-[11px] font-mono text-slate-400">
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Gravity Sandbox</span>
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Web Audio Synth</span>
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Custom Tracks</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'creations:playlab_simulator' 'marble-run' %}" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-slate-950 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40">
-                        <i class="fa-solid fa-play"></i>
-                        <span>Launch Physics Sandbox</span>
-                    </a>
-                </div>
+                <a href="{% url 'creations:playlab_simulator' 'marble-run' %}" class="btn-primary w-full py-2.5 text-xs justify-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-none">
+                    <i class="fa-solid fa-play text-[10px]"></i>
+                    <span>Launch Physics Sandbox</span>
+                </a>
             </div>
 
             <!-- Prototype 2: ChromaTiles Strategy -->
-            <div class="glass-panel glass-panel-hover rounded-3xl overflow-hidden border-slate-800 flex flex-col transition-all duration-300 hover:-translate-y-2">
-                <div class="h-44 bg-gradient-to-tr from-indigo-700 via-purple-700 to-cyan-600 p-6 relative flex flex-col justify-between overflow-hidden">
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <div class="absolute -right-4 -bottom-4 text-8xl text-white/10 pointer-events-none">
-                        <i class="fa-solid fa-border-all"></i>
-                    </div>
-                    <div class="relative z-10 flex items-center justify-between">
-                        <span class="px-2.5 py-1 rounded-lg bg-black/50 text-[11px] font-mono font-bold text-indigo-200 border border-indigo-400/30">
-                            Optics & Light Tactics
+            <div class="pro-card p-6 flex flex-col justify-between group">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="badge-chip badge-indigo font-mono text-[11px]">
+                            Optics & Ray Tracing
                         </span>
-                        <span class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
                     </div>
-                    <div class="relative z-10">
-                        <span class="text-xs uppercase font-mono tracking-wider text-indigo-200 font-bold">Tabletop Game</span>
-                        <h3 class="text-2xl font-black text-white">ChromaTiles Grid</h3>
+
+                    <h3 class="text-2xl font-bold text-white group-hover:text-brand-400 transition-colors tracking-tight mb-1">
+                        ChromaTiles Board Game
+                    </h3>
+                    <p class="text-xs font-mono text-slate-400 mb-4">Tactical Light-Grid Strategy</p>
+
+                    <p class="text-xs text-slate-300 leading-relaxed mb-6 font-normal">
+                        Play against an intelligent AI bot or hotseat 2-player! Rotate and position prism mirror tiles across an 8x8 illuminated grid to direct laser beams into power crystals.
+                    </p>
+
+                    <div class="flex flex-wrap gap-1.5 mb-6 text-[10px] font-mono text-slate-400">
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Vs Bot AI</span>
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Hotseat 2-Player</span>
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Ray Tracing</span>
                     </div>
                 </div>
 
-                <div class="p-6 flex-grow flex flex-col justify-between">
-                    <div>
-                        <p class="text-sm text-slate-300 mb-4 leading-relaxed">
-                            Play against an intelligent AI bot or play hotseat 2-player! Rotate and slide angled mirrors to redirect laser beams, illuminating power crystals to claim energy supremacy.
-                        </p>
-                        <div class="flex flex-wrap gap-1.5 mb-6 text-[11px] font-mono text-slate-400">
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Vs Bot AI</span>
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Hotseat 2-Player</span>
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Ray Tracing</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'creations:playlab_simulator' 'chroma-tiles' %}" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm text-center flex items-center justify-center gap-2 shadow-lg shadow-indigo-950/40">
-                        <i class="fa-solid fa-play"></i>
-                        <span>Play Strategy Match</span>
-                    </a>
-                </div>
+                <a href="{% url 'creations:playlab_simulator' 'chroma-tiles' %}" class="btn-primary w-full py-2.5 text-xs justify-center">
+                    <i class="fa-solid fa-play text-[10px]"></i>
+                    <span>Play Strategy Match</span>
+                </a>
             </div>
 
             <!-- Prototype 3: GearSmith Kinematics -->
-            <div class="glass-panel glass-panel-hover rounded-3xl overflow-hidden border-slate-800 flex flex-col transition-all duration-300 hover:-translate-y-2">
-                <div class="h-44 bg-gradient-to-tr from-cyan-600 via-teal-600 to-emerald-700 p-6 relative flex flex-col justify-between overflow-hidden">
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <div class="absolute -right-4 -bottom-4 text-8xl text-white/10 pointer-events-none">
-                        <i class="fa-solid fa-cogs"></i>
-                    </div>
-                    <div class="relative z-10 flex items-center justify-between">
-                        <span class="px-2.5 py-1 rounded-lg bg-black/50 text-[11px] font-mono font-bold text-cyan-200 border border-cyan-400/30">
+            <div class="pro-card p-6 flex flex-col justify-between group">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="badge-chip badge-emerald font-mono text-[11px]">
                             Four-Bar Linkages
                         </span>
-                        <span class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></span>
+                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
                     </div>
-                    <div class="relative z-10">
-                        <span class="text-xs uppercase font-mono tracking-wider text-cyan-200 font-bold">Kinematics Toy</span>
-                        <h3 class="text-2xl font-black text-white">GearSmith Automaton</h3>
+
+                    <h3 class="text-2xl font-bold text-white group-hover:text-cyan-400 transition-colors tracking-tight mb-1">
+                        GearSmith Automaton
+                    </h3>
+                    <p class="text-xs font-mono text-slate-400 mb-4">Biomimetic Mechanism Lab</p>
+
+                    <p class="text-xs text-slate-300 leading-relaxed mb-6 font-normal">
+                        Simulate compound gear reduction ratios, eccentric cam strokes, and watch articulated biomimetic wings and fins come to life with authentic non-linear harmonic motion.
+                    </p>
+
+                    <div class="flex flex-wrap gap-1.5 mb-6 text-[10px] font-mono text-slate-400">
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Gear Ratios</span>
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Linkage Synthesis</span>
+                        <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">Automata Puppetry</span>
                     </div>
                 </div>
 
-                <div class="p-6 flex-grow flex flex-col justify-between">
-                    <div>
-                        <p class="text-sm text-slate-300 mb-4 leading-relaxed">
-                            Simulate real mechanical gearing, reduction ratios, eccentric cam strokes, and watch articulated biomimetic wings and fins come to life with authentic harmonic motion.
-                        </p>
-                        <div class="flex flex-wrap gap-1.5 mb-6 text-[11px] font-mono text-slate-400">
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Gear Ratios</span>
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Linkage Synthesis</span>
-                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Automata Puppetry</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'creations:playlab_simulator' 'kinetic-gears' %}" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-slate-950 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/40">
-                        <i class="fa-solid fa-play"></i>
-                        <span>Launch Kinematics Lab</span>
-                    </a>
-                </div>
+                <a href="{% url 'creations:playlab_simulator' 'kinetic-gears' %}" class="btn-primary w-full py-2.5 text-xs justify-center bg-cyan-600 hover:bg-cyan-500 shadow-none">
+                    <i class="fa-solid fa-play text-[10px]"></i>
+                    <span>Launch Kinematics Lab</span>
+                </a>
             </div>
 
         </div>

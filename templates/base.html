@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}PlayForge - Toys & Games Innovation Studio{% endblock %}</title>
+    <title>{% block title %}PlayForge &bull; Toys & Games Invention Studio{% endblock %}</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,21 +14,23 @@
             theme: {
                 extend: {
                     colors: {
-                        forge: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            400: '#a78bfa',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            900: '#4c1d95',
-                            950: '#0b0816',
+                        slate: {
+                            850: '#111827',
+                            900: '#0b1120',
+                            950: '#070b14',
                         },
-                        amberGlow: '#f59e0b',
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
                     }
                 }
             }
@@ -38,139 +40,146 @@
     <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-purple-600 selection:text-white">
-    
-    <!-- Top Announcement / Ticker -->
-    <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-xs py-1.5 px-4 text-center border-b border-purple-800/40 text-purple-200">
-        <span class="inline-flex items-center gap-1.5 font-medium">
-            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Toys & Games Innovation Challenge: Conceptualize & Prototype the next generation of play!</span>
-            <a href="{% url 'creations:challenges_list' %}" class="underline hover:text-white ml-2 font-bold">View Active Challenges &rarr;</a>
-        </span>
+<body class="min-h-full flex flex-col bg-[#080c15] text-slate-100 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Subtle Top Ticker / Challenge Banner -->
+    <div class="bg-[#0b101d] text-xs py-1.5 px-4 text-center border-b border-white/[0.06] text-slate-400">
+        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span class="font-medium text-slate-300">Toys & Games Innovation Challenge</span>
+            <span class="text-slate-600">&bull;</span>
+            <span class="hidden sm:inline">Conceptualize and prototype unique play systems</span>
+            <a href="{% url 'creations:challenges_list' %}" class="text-brand-400 hover:text-brand-300 font-semibold underline underline-offset-2 ml-1">
+                Explore Briefs &rarr;
+            </a>
+        </div>
     </div>
 
     <!-- Navigation Header -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800">
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-[#080c15]/90 border-b border-white/[0.07]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Brand Logo -->
-                <div class="flex items-center gap-3">
-                    <a href="{% url 'creations:home' %}" class="flex items-center gap-2.5 group">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-amber-500 p-0.5 shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
-                            <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                                <i class="fa-solid fa-shapes text-purple-400 text-lg group-hover:rotate-12 transition-transform"></i>
-                            </div>
+                
+                <!-- Brand Identity -->
+                <div class="flex items-center gap-8">
+                    <a href="{% url 'creations:home' %}" class="flex items-center gap-3 group">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-shapes text-white text-sm"></i>
                         </div>
-                        <div>
-                            <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-purple-400 bg-clip-text text-transparent">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
                                 PlayForge
+                                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-brand-500/10 text-brand-300 border border-brand-500/20 font-medium">Studio</span>
                             </span>
-                            <span class="text-[10px] tracking-widest uppercase font-mono block text-purple-400 -mt-1">Toy & Game Studio</span>
                         </div>
                     </a>
+
+                    <!-- Nav Links -->
+                    <nav class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-300">
+                        <a href="{% url 'creations:home' %}" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/[0.04] transition-colors">
+                            Explore
+                        </a>
+                        <a href="{% url 'creations:playlab_hub' %}" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/[0.04] transition-colors flex items-center gap-1.5">
+                            PlayLab Arcade
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        </a>
+                        <a href="{% url 'creations:spark_generator' %}" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/[0.04] transition-colors">
+                            Spark Engine
+                        </a>
+                        <a href="{% url 'creations:challenges_list' %}" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/[0.04] transition-colors">
+                            Challenges
+                        </a>
+                    </nav>
                 </div>
 
-                <!-- Nav Links -->
-                <nav class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-300">
-                    <a href="{% url 'creations:home' %}" class="px-3.5 py-2 rounded-lg hover:bg-slate-800/80 hover:text-white transition-colors flex items-center gap-2">
-                        <i class="fa-solid fa-compass text-slate-400"></i> Explore Blueprints
-                    </a>
-                    <a href="{% url 'creations:playlab_hub' %}" class="px-3.5 py-2 rounded-lg hover:bg-slate-800/80 hover:text-white transition-colors flex items-center gap-2 relative">
-                        <i class="fa-solid fa-gamepad text-emerald-400"></i> PlayLab Arcade
-                        <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-emerald-500/40">Playable</span>
-                    </a>
-                    <a href="{% url 'creations:spark_generator' %}" class="px-3.5 py-2 rounded-lg hover:bg-slate-800/80 hover:text-white transition-colors flex items-center gap-2">
-                        <i class="fa-solid fa-bolt text-amber-400"></i> Spark Engine
-                    </a>
-                    <a href="{% url 'creations:challenges_list' %}" class="px-3.5 py-2 rounded-lg hover:bg-slate-800/80 hover:text-white transition-colors flex items-center gap-2">
-                        <i class="fa-solid fa-trophy text-purple-400"></i> Challenges
-                    </a>
-                </nav>
-
-                <!-- Action CTA -->
+                <!-- Right Actions -->
                 <div class="flex items-center gap-3">
-                    <a href="{% url 'creations:create' %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-600/25 hover:shadow-purple-600/40 transition-all hover:scale-[1.02] active:scale-[0.98]">
-                        <i class="fa-solid fa-hammer"></i>
-                        <span>Forge Invention</span>
+                    <a href="{% url 'creations:create' %}" class="btn-primary py-2 px-3.5 text-xs">
+                        <i class="fa-solid fa-plus text-[10px]"></i>
+                        <span>Forge Concept</span>
                     </a>
                 </div>
+
             </div>
         </div>
     </header>
 
-    <!-- Flash Messages -->
+    <!-- Flash Messages Toast -->
     {% if messages %}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
         {% for message in messages %}
-        <div class="p-4 rounded-xl mb-3 flex items-center gap-3 border text-sm backdrop-blur-sm
-            {% if message.tags == 'success' %}bg-emerald-950/60 border-emerald-800/60 text-emerald-200
-            {% elif message.tags == 'error' %}bg-rose-950/60 border-rose-800/60 text-rose-200
-            {% else %}bg-indigo-950/60 border-indigo-800/60 text-indigo-200{% endif %}">
-            <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check text-emerald-400{% else %}fa-circle-info text-indigo-400{% endif %}"></i>
-            <span>{{ message }}</span>
+        <div class="p-3.5 rounded-xl mb-3 flex items-center justify-between text-xs font-medium border backdrop-blur-md
+            {% if message.tags == 'success' %}bg-emerald-950/40 border-emerald-500/30 text-emerald-200
+            {% elif message.tags == 'error' %}bg-rose-950/40 border-rose-500/30 text-rose-200
+            {% else %}bg-slate-900/60 border-white/10 text-slate-200{% endif %}">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check text-emerald-400{% else %}fa-circle-info text-brand-400{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
         {% endfor %}
     </div>
     {% endif %}
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <main class="flex-grow">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-950 border-t border-slate-900 mt-20 text-slate-400 text-sm">
+    <!-- Professional Footer -->
+    <footer class="bg-[#060910] border-t border-white/[0.06] mt-24 text-slate-400 text-xs">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <div class="md:col-span-2">
-                    <div class="flex items-center gap-2.5 mb-3">
-                        <i class="fa-solid fa-shapes text-purple-500 text-xl"></i>
-                        <span class="font-bold text-lg text-white">PlayForge Studio</span>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div class="md:col-span-2 space-y-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-brand-600 flex items-center justify-center">
+                            <i class="fa-solid fa-shapes text-white text-[11px]"></i>
+                        </div>
+                        <span class="font-bold text-sm text-white">PlayForge Studio</span>
                     </div>
-                    <p class="text-slate-400 text-sm max-w-md leading-relaxed">
-                        Dedicated to challenging creative minds to conceptualize, engineer, and build unique toys and games. 
-                        From clockwork marble runs and optical light-tactics board games to zero-gravity sensory inventions.
+                    <p class="text-slate-400 text-xs max-w-sm leading-relaxed">
+                        An open platform dedicated to conceptualizing, prototyping, and engineering original toys, tactile novelties, and tabletop strategy games.
                     </p>
-                    <div class="mt-4 flex items-center gap-3 text-xs text-purple-400 font-mono">
-                        <span><i class="fa-solid fa-code"></i> Powered by Django 6</span>
+                    <div class="flex items-center gap-3 text-[11px] font-mono text-slate-400 pt-1">
+                        <span>Django 6.1 Architecture</span>
                         <span>&bull;</span>
-                        <span><i class="fa-solid fa-cube"></i> Interactive Physics & PlayLab</span>
+                        <span>Interactive HTML5 Canvas Physics</span>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-3 text-xs tracking-wider uppercase font-mono">Toy & Game Hub</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="{% url 'creations:home' %}" class="hover:text-purple-400 transition-colors">Explore All Blueprints</a></li>
-                        <li><a href="{% url 'creations:playlab_hub' %}" class="hover:text-purple-400 transition-colors">PlayLab Prototyping Arcade</a></li>
-                        <li><a href="{% url 'creations:spark_generator' %}" class="hover:text-purple-400 transition-colors">Spark Ideation Engine</a></li>
-                        <li><a href="{% url 'creations:challenges_list' %}" class="hover:text-purple-400 transition-colors">Maker Design Challenges</a></li>
+                    <h4 class="text-white font-semibold mb-3 text-xs tracking-wider uppercase font-mono">Platform</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="{% url 'creations:home' %}" class="hover:text-slate-200 transition-colors">Invention Directory</a></li>
+                        <li><a href="{% url 'creations:playlab_hub' %}" class="hover:text-slate-200 transition-colors">PlayLab Virtual Arcade</a></li>
+                        <li><a href="{% url 'creations:spark_generator' %}" class="hover:text-slate-200 transition-colors">Spark Ideation Engine</a></li>
+                        <li><a href="{% url 'creations:challenges_list' %}" class="hover:text-slate-200 transition-colors">Design Challenges</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-3 text-xs tracking-wider uppercase font-mono">Interactive PlayLab</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="{% url 'creations:playlab_simulator' 'marble-run' %}" class="hover:text-emerald-400 transition-colors">CogCraft Marble Sandbox</a></li>
-                        <li><a href="{% url 'creations:playlab_simulator' 'chroma-tiles' %}" class="hover:text-indigo-400 transition-colors">ChromaTiles Board Game</a></li>
-                        <li><a href="{% url 'creations:playlab_simulator' 'kinetic-gears' %}" class="hover:text-amber-400 transition-colors">GearSmith Kinematics</a></li>
-                        <li><a href="{% url 'creations:create' %}" class="hover:text-purple-400 transition-colors">Submit Your Invention</a></li>
+                    <h4 class="text-white font-semibold mb-3 text-xs tracking-wider uppercase font-mono">Simulators</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="{% url 'creations:playlab_simulator' 'marble-run' %}" class="hover:text-slate-200 transition-colors">CogCraft Physics Sandbox</a></li>
+                        <li><a href="{% url 'creations:playlab_simulator' 'chroma-tiles' %}" class="hover:text-slate-200 transition-colors">ChromaTiles Board Game</a></li>
+                        <li><a href="{% url 'creations:playlab_simulator' 'kinetic-gears' %}" class="hover:text-slate-200 transition-colors">GearSmith Kinematics</a></li>
+                        <li><a href="{% url 'creations:create' %}" class="hover:text-slate-200 transition-colors">Submit Blueprint</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-                <p>&copy; 2026 PlayForge Studio &bull; Creative Toys & Games Innovation Platform.</p>
+            <div class="pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
+                <p>&copy; 2026 PlayForge Studio &bull; Precision Toys & Games Design System.</p>
                 <div class="flex items-center gap-4">
-                    <span>Invent &bull; Prototype &bull; Playtest</span>
+                    <span>Clean Architecture</span>
+                    <span>&bull;</span>
+                    <span>Open Maker Specifications</span>
                 </div>
             </div>
         </div>

@@ -19,3 +19,4 @@ urlpatterns = [
     path('challenges/', views.challenges_list, name='challenges_list'),
     path('challenges/<slug:slug>/', views.challenge_detail, name='challenge_detail'),
 ]
+

@@ -114,3 +114,4 @@ Django-project/
 │           └── kinetic_gears.html  # GearSmith kinematic automata simulator
 └── manage.py
 ```
+

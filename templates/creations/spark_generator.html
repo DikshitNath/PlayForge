@@ -1,120 +1,120 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Spark Ideation Engine - PlayForge Studio{% endblock %}
+{% block title %}Spark Ideation Engine &bull; PlayForge{% endblock %}
 
 {% block content %}
-<div class="blueprint-grid min-h-screen py-12">
+<div class="bg-grid-pattern min-h-screen py-12">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
-        <div class="text-center max-w-3xl mx-auto mb-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-3">
-                <i class="fa-solid fa-bolt text-amber-400"></i>
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium mb-3">
+                <i class="fa-solid fa-bolt text-[10px]"></i>
                 <span>Combinatorial Ideation Machine</span>
             </div>
-            <h1 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-4">
-                The <span class="bg-gradient-to-r from-amber-400 via-rose-400 to-purple-400 bg-clip-text text-transparent">Spark Engine</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+                The Spark Ideation Engine
             </h1>
-            <p class="text-slate-300 text-sm leading-relaxed">
-                Break creative barriers by combining disparate mechanics, unconventional materials, and novel themes. 
-                Spin the engine to generate infinite unique toy and game concepts, then send them to the Forge.
+            <p class="text-slate-400 text-xs leading-relaxed">
+                Break creative barriers by synthesizing disparate physics mechanisms, unexpected materials, and novel play modes.
             </p>
         </div>
 
-        <!-- The Combinatorial Slot Machine -->
-        <div class="glass-panel p-6 sm:p-10 rounded-3xl border-slate-800 shadow-2xl mb-12">
+        <!-- The Dial Machine Card -->
+        <div class="pro-card p-6 sm:p-10 mb-12">
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
                 
                 <!-- Dial 1: Audience -->
-                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex flex-col justify-between">
+                <div class="p-4 rounded-xl bg-slate-900/50 border border-white/[0.06] flex flex-col justify-between">
                     <div>
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold block mb-1">
-                            Dial 1 &bull; Audience
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1">
+                            01 &bull; Target Audience
                         </span>
-                        <div id="dial-audience" class="text-sm font-bold text-white min-h-[48px] flex items-center">
+                        <div id="dial-audience" class="text-xs font-bold text-white min-h-[48px] flex items-center leading-snug">
                             Curious 6-8 year olds who love dismantling gadgets
                         </div>
                     </div>
-                    <div class="text-[10px] text-slate-400 font-mono mt-2">Target Players</div>
+                    <div class="text-[10px] text-slate-400 font-mono mt-2">Demographic</div>
                 </div>
 
                 <!-- Dial 2: Mechanism -->
-                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex flex-col justify-between">
+                <div class="p-4 rounded-xl bg-slate-900/50 border border-white/[0.06] flex flex-col justify-between">
                     <div>
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold block mb-1">
-                            Dial 2 &bull; Mechanism
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1">
+                            02 &bull; Core Mechanism
                         </span>
-                        <div id="dial-mechanism" class="text-sm font-bold text-white min-h-[48px] flex items-center">
+                        <div id="dial-mechanism" class="text-xs font-bold text-white min-h-[48px] flex items-center leading-snug">
                             Repulsive neodymium magnet levitation
                         </div>
                     </div>
-                    <div class="text-[10px] text-slate-400 font-mono mt-2">Core Physics/Rule</div>
+                    <div class="text-[10px] text-slate-400 font-mono mt-2">Physics Principle</div>
                 </div>
 
                 <!-- Dial 3: Material -->
-                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex flex-col justify-between">
+                <div class="p-4 rounded-xl bg-slate-900/50 border border-white/[0.06] flex flex-col justify-between">
                     <div>
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block mb-1">
-                            Dial 3 &bull; Material
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1">
+                            03 &bull; Physical Medium
                         </span>
-                        <div id="dial-material" class="text-sm font-bold text-white min-h-[48px] flex items-center">
+                        <div id="dial-material" class="text-xs font-bold text-white min-h-[48px] flex items-center leading-snug">
                             Laser-cut birch plywood and brass hardware
                         </div>
                     </div>
-                    <div class="text-[10px] text-slate-400 font-mono mt-2">Physical Medium</div>
+                    <div class="text-[10px] text-slate-400 font-mono mt-2">Fabrication</div>
                 </div>
 
                 <!-- Dial 4: Theme -->
-                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 flex flex-col justify-between">
+                <div class="p-4 rounded-xl bg-slate-900/50 border border-white/[0.06] flex flex-col justify-between">
                     <div>
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block mb-1">
-                            Dial 4 &bull; Theme / Goal
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1">
+                            04 &bull; Thematic World
                         </span>
-                        <div id="dial-theme" class="text-sm font-bold text-white min-h-[48px] flex items-center">
+                        <div id="dial-theme" class="text-xs font-bold text-white min-h-[48px] flex items-center leading-snug">
                             Time-traveling clockwork subterranean city
                         </div>
                     </div>
-                    <div class="text-[10px] text-slate-400 font-mono mt-2">Narrative World</div>
+                    <div class="text-[10px] text-slate-400 font-mono mt-2">Narrative</div>
                 </div>
 
             </div>
 
             <!-- Spin CTA -->
-            <div class="flex items-center justify-center gap-4">
-                <button onclick="spinEngine()" id="spin-btn" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-slate-950 font-black text-base shadow-xl shadow-amber-950/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
-                    <i class="fa-solid fa-arrows-rotate text-lg" id="spin-icon"></i>
-                    <span>Spin The Spark Engine</span>
+            <div class="flex items-center justify-center">
+                <button onclick="spinEngine()" id="spin-btn" class="btn-primary text-xs py-3 px-6 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold shadow-none">
+                    <i class="fa-solid fa-arrows-rotate text-xs" id="spin-icon"></i>
+                    <span>Spin Ideation Engine</span>
                 </button>
             </div>
 
-            <!-- Synthesized Pitch Card -->
-            <div id="pitch-container" class="mt-8 p-6 rounded-2xl bg-purple-950/20 border border-purple-800/40 relative">
+            <!-- Synthesized Pitch Output -->
+            <div id="pitch-container" class="mt-8 p-6 rounded-xl bg-white/[0.02] border border-white/[0.06] relative">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-mono uppercase text-amber-300 font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-sparkles"></i>
-                        <span>Generated Invention Concept</span>
+                    <span class="text-[11px] font-mono uppercase text-brand-400 font-bold flex items-center gap-1.5">
+                        <i class="fa-solid fa-sparkles text-[10px]"></i>
+                        <span>Synthesized Concept</span>
                     </span>
-                    <span class="text-[11px] font-mono bg-purple-900/50 text-purple-200 px-2 py-0.5 rounded">
-                        Ready To Forge
+                    <span class="badge-chip badge-slate font-mono text-[10px]">
+                        Spec Ready
                     </span>
                 </div>
 
-                <h3 id="generated-title" class="text-2xl font-black text-white mb-2">
+                <h3 id="generated-title" class="text-xl font-bold text-white mb-2 tracking-tight">
                     AeroMag Chrono-Track
                 </h3>
-                <p id="generated-pitch" class="text-sm text-slate-300 mb-6 leading-relaxed">
+                
+                <p id="generated-pitch" class="text-xs text-slate-300 mb-5 leading-relaxed font-normal">
                     A zero-friction magnetic levitation kinetic toy where players assemble laser-cut brass gear escapements to guide magnetic pods through a clockwork subterranean world.
                 </p>
 
-                <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-purple-800/30">
-                    <div class="flex items-center gap-2 text-xs text-slate-400 font-mono">
-                        <i class="fa-solid fa-check text-emerald-400"></i> Pre-fills the Invention Forge form
-                    </div>
-                    <a id="forge-link" href="{% url 'creations:create' %}" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg transition-all hover:scale-105">
-                        <i class="fa-solid fa-hammer"></i>
-                        <span>Send to Forge & Build Blueprint</span>
+                <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.06]">
+                    <span class="text-xs text-slate-400 font-mono">
+                        <i class="fa-solid fa-check text-emerald-400 mr-1"></i> Pre-fills the Invention Forge form
+                    </span>
+                    <a id="forge-link" href="{% url 'creations:create' %}" class="btn-primary text-xs py-2 px-4">
+                        <i class="fa-solid fa-hammer text-[10px]"></i>
+                        <span>Send to Forge &rarr;</span>
                     </a>
                 </div>
             </div>
@@ -133,8 +133,7 @@ const audiences = [
     "Adult puzzle enthusiasts seeking extreme spatial challenges",
     "Sensory-seeking toddlers and neurodivergent kids",
     "Classroom STEM students learning physics in teams",
-    "Solo tabletop tacticians looking for 15-minute deep puzzles",
-    "Teens seeking competitive dexterous kinetic tournaments"
+    "Solo tabletop tacticians looking for 15-minute deep puzzles"
 ];
 
 const mechanics = [
@@ -144,8 +143,7 @@ const mechanics = [
     "Modular interlocking gears with eccentric cam linkages",
     "Bistable compliant spring flexures and snap-action origami",
     "Fluidic hydraulic pressure channels with colored air-water vials",
-    "Hidden blind-bidding combined with rotating spatial labyrinth boards",
-    "Resonant acoustic sound waves guiding floating spheres"
+    "Hidden blind-bidding combined with rotating spatial labyrinth boards"
 ];
 
 const materials = [
@@ -154,8 +152,7 @@ const materials = [
     "Conductive graphite pencil traces & LED coin-cell circuits",
     "3D printed flexible TPU polymers and carbon fiber rods",
     "Smooth river stones, magnetic silicone putty & acrylic domes",
-    "Cardstock origami folds paired with elastic polymer bands",
-    "Clear optical acrylic with colored non-toxic ferrofluids"
+    "Cardstock origami folds paired with elastic polymer bands"
 ];
 
 const themes = [
@@ -164,8 +161,7 @@ const themes = [
     "Time-traveling clockwork subterranean city",
     "Mythological forest where trees whisper harmonic frequencies",
     "Microscopic particle accelerator tournament",
-    "Wind-powered desert nomadic convoy race",
-    "Bioluminescent nocturnal insect ecosystem"
+    "Wind-powered desert nomadic convoy race"
 ];
 
 const titlePrefixes = ["Chrono", "Aero", "Pulse", "Nova", "Flux", "Cog", "Prism", "Echo", "Terra", "Vibe"];
@@ -187,12 +183,12 @@ function spinEngine() {
         document.getElementById('dial-theme').textContent = getRandomItem(themes);
         counter++;
 
-        if (counter > 10) {
+        if (counter > 8) {
             clearInterval(interval);
             icon.classList.remove('animate-spin');
             finalizeConcept();
         }
-    }, 80);
+    }, 70);
 }
 
 function finalizeConcept() {

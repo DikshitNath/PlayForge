@@ -130,9 +130,9 @@ class PlayForgeViewTests(TestCase):
 
         res_detail = self.client.get(reverse('creations:challenge_detail', kwargs={'slug': self.challenge.slug}))
         self.assertEqual(res_detail.status_code, 200)
-        self.assertContains(res_detail, "Strict Constraints")
+        self.assertContains(res_detail, "Constraints")
 
     def test_print_blueprint(self):
         response = self.client.get(reverse('creations:print_blueprint', kwargs={'slug': self.creation.slug}))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Maker Fabrication Blueprint Spec")
+        self.assertContains(response, "Maker Fabrication Specification Document")

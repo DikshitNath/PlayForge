@@ -1,73 +1,72 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Design Challenges - PlayForge Studio{% endblock %}
+{% block title %}Design Challenges &bull; PlayForge{% endblock %}
 
 {% block content %}
-<div class="blueprint-grid min-h-screen py-12">
+<div class="bg-grid-pattern min-h-screen py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
-        <div class="text-center max-w-3xl mx-auto mb-12">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold mb-3">
-                <i class="fa-solid fa-trophy text-purple-400"></i>
-                <span>Innovation Hackathons</span>
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-medium mb-3">
+                <i class="fa-solid fa-trophy text-[10px]"></i>
+                <span>Innovation Briefs</span>
             </div>
-            <h1 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-4">
-                Toy & Game <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 bg-clip-text text-transparent">Design Challenges</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+                Toy & Game Design Challenges
             </h1>
-            <p class="text-slate-300 text-base leading-relaxed">
-                Take on constraints that push your creative limits. Compete against maker constraints: zero gravity, single-sheet origami mechanisms, acoustic manipulation, and extreme portability.
+            <p class="text-slate-400 text-xs leading-relaxed">
+                Take on structured constraints: zero gravity, single-sheet paper mechanisms, acoustic manipulation, and extreme portability.
             </p>
         </div>
 
-        <!-- Challenge Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- Challenges Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {% for challenge in challenges %}
-            <div class="glass-panel glass-panel-hover rounded-3xl p-8 border-slate-800 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1">
+            <div class="pro-card p-6 sm:p-8 flex flex-col justify-between group">
                 <div>
                     <div class="flex items-center justify-between gap-3 mb-4">
-                        <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-semibold flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="badge-chip badge-emerald font-mono text-[11px]">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                             Active Challenge
                         </span>
-                        <span class="text-xs font-mono text-purple-400">
+                        <span class="text-xs font-mono text-slate-400">
                             {{ challenge.entry_count }} Submissions
                         </span>
                     </div>
 
-                    <h2 class="text-2xl font-black text-white mb-2">
-                        <a href="{% url 'creations:challenge_detail' challenge.slug %}" class="hover:text-purple-400 transition-colors">
+                    <h2 class="text-xl font-bold text-white group-hover:text-brand-400 transition-colors tracking-tight mb-1">
+                        <a href="{% url 'creations:challenge_detail' challenge.slug %}">
                             {{ challenge.title }}
                         </a>
                     </h2>
                     
-                    <p class="text-xs font-mono text-amber-300 mb-4 font-semibold uppercase tracking-wider">
-                        Theme: {{ challenge.theme }}
+                    <p class="text-xs font-mono text-slate-400 mb-4">
+                        Theme: <span class="text-slate-200">{{ challenge.theme }}</span>
                     </p>
 
-                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                    <p class="text-xs text-slate-300 leading-relaxed mb-6 font-normal">
                         {{ challenge.description }}
                     </p>
 
                     <!-- Constraints Box -->
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300 mb-6">
-                        <strong class="text-rose-400 font-mono uppercase text-[11px] block mb-1">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Required Design Constraints:
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-white/[0.06] text-xs text-slate-300 mb-6 font-mono">
+                        <strong class="text-rose-400 uppercase text-[10px] block mb-1">
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Strict Constraints:
                         </strong>
-                        {{ challenge.constraints }}
+                        <span class="text-[11px] text-slate-300">{{ challenge.constraints }}</span>
                     </div>
                 </div>
 
-                <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                    <div class="flex items-center gap-2 text-xs font-mono text-amber-400">
-                        <i class="fa-solid fa-medal"></i>
+                <div class="pt-4 border-t border-white/[0.06] flex items-center justify-between">
+                    <div class="flex items-center gap-1.5 text-xs font-mono text-amber-400">
+                        <i class="fa-solid fa-award text-xs"></i>
                         <span>{{ challenge.reward_title }}</span>
                     </div>
 
-                    <a href="{% url 'creations:challenge_detail' challenge.slug %}" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-2 transition-colors">
-                        <span>View Entries & Submit</span>
-                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    <a href="{% url 'creations:challenge_detail' challenge.slug %}" class="btn-primary text-xs py-2 px-3.5">
+                        <span>View Brief &rarr;</span>
                     </a>
                 </div>
             </div>

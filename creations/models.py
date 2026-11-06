@@ -42,6 +42,7 @@ class Creation(models.Model):
         ('MARBLE_RUN', 'Kinetic Contraption Sandbox (Interactive)'),
         ('CHROMA_TILES', 'ChromaTiles Tactical Game (Playable)'),
         ('KINETIC_GEARS', 'Gear Motion Toy Simulator (Interactive)'),
+        ('RESONANCE_LAB', 'Acoustic Resonance & Chladni Lab (Interactive)'),
     ]
 
     title = models.CharField(max_length=200)

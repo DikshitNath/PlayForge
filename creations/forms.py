@@ -82,3 +82,4 @@ class PlaytestReviewForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 4, 'placeholder': 'Share detailed feedback on gameplay balance, physical feel, and kids/adult reaction...'}),
             'maker_mod_idea': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 2, 'placeholder': 'Optional hack or expansion suggestion...'}),
         }
+

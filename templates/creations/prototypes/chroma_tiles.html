@@ -1,147 +1,137 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ChromaTiles Board Game - PlayLab Arcade{% endblock %}
+{% block title %}ChromaTiles Board Game &bull; PlayLab{% endblock %}
 
 {% block content %}
-<div class="blueprint-sheet min-h-screen py-8">
+<div class="bg-grid-pattern min-h-screen py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.06]">
             <div>
-                <div class="flex items-center gap-2 text-xs font-mono text-indigo-400 mb-1">
-                    <a href="{% url 'creations:playlab_hub' %}" class="hover:underline flex items-center gap-1">
-                        <i class="fa-solid fa-gamepad"></i> PlayLab
+                <div class="flex items-center gap-2 text-xs font-mono text-slate-400 mb-1">
+                    <a href="{% url 'creations:playlab_hub' %}" class="hover:text-white flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-left text-[10px]"></i> PlayLab
                     </a>
                     <span>/</span>
-                    <span class="text-slate-400">Playable Tactical Board Game</span>
+                    <span class="text-brand-400">Tactical Board Game Prototype</span>
                 </div>
-                <h1 class="text-3xl font-extrabold text-white flex items-center gap-3">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3 tracking-tight">
                     <span>ChromaTiles: Prismatic Light Grid</span>
-                    <span class="text-xs font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2.5 py-1 rounded-full">
-                        Optics & Ray Tracing Strategy
+                    <span class="badge-chip badge-indigo font-mono text-[10px]">
+                        Optics & Ray Tracing
                     </span>
                 </h1>
-                <p class="text-sm text-slate-300 mt-1">
-                    Place and rotate optical prism mirrors to redirect laser beams into sensor crystals. Play Hotseat or vs Bot AI!
+                <p class="text-xs text-slate-400 mt-0.5">
+                    Position and rotate 45° optical prism mirrors to redirect laser beams into target sensor crystals.
                 </p>
             </div>
 
             <div class="flex items-center gap-3">
                 {% if matched_creation %}
-                <a href="{% url 'creations:detail' matched_creation.slug %}" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-purple-500 text-purple-300 text-xs font-semibold flex items-center gap-2 transition-colors">
-                    <i class="fa-solid fa-file-lines"></i>
-                    <span>Read Physical Blueprint</span>
+                <a href="{% url 'creations:detail' matched_creation.slug %}" class="btn-secondary text-xs py-2 px-3">
+                    <i class="fa-solid fa-file-lines text-[10px]"></i>
+                    <span>Maker Dossier</span>
                 </a>
                 {% endif %}
-                <a href="{% url 'creations:home' %}" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold">
-                    Back to Studio
-                </a>
             </div>
         </div>
 
-        <!-- Game Arena -->
+        <!-- Game Arena Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             
-            <!-- Game State & Rules Sidebar -->
+            <!-- Controls Sidebar -->
             <div class="lg:col-span-1 space-y-4">
                 
-                <!-- Match Scoreboard -->
-                <div class="glass-panel p-5 rounded-2xl border-slate-800">
-                    <h3 class="text-xs font-mono uppercase tracking-wider text-indigo-400 font-bold mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-trophy"></i>
-                        <span>Match Status</span>
+                <!-- Scoreboard -->
+                <div class="pro-card p-5 space-y-3">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold mb-3 flex items-center gap-1.5">
+                        <i class="fa-solid fa-trophy text-[11px] text-amber-400"></i>
+                        <span>Match Telemetry</span>
                     </h3>
 
                     <!-- Player 1 -->
-                    <div id="p1-card" class="p-3.5 rounded-xl border-2 border-cyan-500 bg-cyan-950/30 mb-3 flex items-center justify-between transition-all">
+                    <div id="p1-card" class="p-3 rounded-xl border border-cyan-500/40 bg-cyan-950/20 flex items-center justify-between">
                         <div class="flex items-center gap-2.5">
-                            <span class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
                             <div>
                                 <span class="text-xs font-bold text-white block">Player 1 (Cyan)</span>
-                                <span class="text-[10px] text-cyan-300 font-mono">Laser: Top-Left</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Laser: Top-Left</span>
                             </div>
                         </div>
-                        <div class="text-2xl font-black text-cyan-400 font-mono" id="p1-score">0</div>
+                        <div class="text-2xl font-bold text-cyan-400 font-mono" id="p1-score">0</div>
                     </div>
 
                     <!-- Player 2 / AI -->
-                    <div id="p2-card" class="p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 mb-4 flex items-center justify-between transition-all">
+                    <div id="p2-card" class="p-3 rounded-xl border border-white/[0.06] bg-slate-900/30 flex items-center justify-between">
                         <div class="flex items-center gap-2.5">
-                            <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
                             <div>
                                 <span class="text-xs font-bold text-white block" id="p2-label">Bot Optic-1 (Amber)</span>
-                                <span class="text-[10px] text-amber-300 font-mono">Laser: Bottom-Right</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Laser: Bottom-Right</span>
                             </div>
                         </div>
-                        <div class="text-2xl font-black text-amber-400 font-mono" id="p2-score">0</div>
+                        <div class="text-2xl font-bold text-amber-400 font-mono" id="p2-score">0</div>
                     </div>
 
-                    <!-- Game Mode Select -->
-                    <div class="border-t border-slate-800 pt-3">
-                        <label class="block text-[11px] text-slate-400 font-mono mb-1.5">Opponent Mode</label>
+                    <!-- Mode Select -->
+                    <div class="pt-2 border-t border-white/[0.06]">
+                        <label class="block text-[11px] text-slate-400 font-mono mb-1">Opponent Mode</label>
                         <select id="game-mode" onchange="resetGame()" class="form-select text-xs">
                             <option value="ai">Single Player vs AI Bot</option>
                             <option value="hotseat">2-Player Pass & Play (Hotseat)</option>
                         </select>
                     </div>
 
-                    <button onclick="resetGame()" class="w-full mt-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-colors">
-                        <i class="fa-solid fa-rotate-left mr-1"></i> New Game
+                    <button onclick="resetGame()" class="btn-secondary w-full text-xs py-2 justify-center">
+                        <i class="fa-solid fa-rotate-left text-[10px]"></i>
+                        <span>New Match</span>
                     </button>
                 </div>
 
-                <!-- Tile Selector -->
-                <div class="glass-panel p-5 rounded-2xl border-slate-800">
-                    <h3 class="text-xs font-mono uppercase tracking-wider text-indigo-400 font-bold mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-shapes"></i>
-                        <span>Active Tile To Place</span>
+                <!-- Tile Placement Selection -->
+                <div class="pro-card p-5 space-y-3">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shapes text-[11px] text-brand-400"></i>
+                        <span>Active Mirror Tile</span>
                     </h3>
+                    
                     <div class="grid grid-cols-2 gap-2 text-xs">
-                        <button onclick="selectTileType('mirror_diag1')" id="btn-mirror1" class="tile-select-btn active-tile p-3 rounded-xl border-2 border-indigo-500 bg-indigo-950/40 text-center flex flex-col items-center gap-1">
-                            <span class="text-lg font-bold text-indigo-300">╱</span>
+                        <button onclick="selectTileType('mirror_diag1')" id="btn-mirror1" class="tile-select-btn p-3 rounded-xl border border-brand-500 bg-brand-500/10 text-center flex flex-col items-center gap-1">
+                            <span class="text-lg font-bold text-brand-300">╱</span>
                             <span class="text-[10px] text-slate-300 font-mono">45° Right (╱)</span>
                         </button>
-                        <button onclick="selectTileType('mirror_diag2')" id="btn-mirror2" class="tile-select-btn p-3 rounded-xl border border-slate-800 bg-slate-900/40 text-center flex flex-col items-center gap-1 hover:border-slate-700">
-                            <span class="text-lg font-bold text-indigo-300">╲</span>
+                        <button onclick="selectTileType('mirror_diag2')" id="btn-mirror2" class="tile-select-btn p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] text-center flex flex-col items-center gap-1 hover:border-white/20">
+                            <span class="text-lg font-bold text-brand-300">╲</span>
                             <span class="text-[10px] text-slate-300 font-mono">45° Left (╲)</span>
                         </button>
                     </div>
-                    <div class="mt-3 text-[11px] text-slate-400 leading-normal">
-                        <strong>Rule:</strong> Click an empty grid cell to place your chosen mirror tile, or click an existing tile on your turn to rotate it!
-                    </div>
-                </div>
-
-                <!-- Rules Accordion -->
-                <div class="glass-panel p-4 rounded-2xl border-slate-800 text-xs text-slate-400 space-y-2">
-                    <div class="font-bold text-slate-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-scroll text-indigo-400"></i>
-                        <span>How To Win:</span>
-                    </div>
-                    <p>Redirect your laser beam to illuminate the glowing <strong class="text-emerald-400">Crystals</strong>. Each illuminated crystal grants 1 point every round.</p>
-                    <p>First player to reach <strong class="text-white">10 Energy Points</strong> overcharges their pylon and wins!</p>
+                    
+                    <p class="text-[11px] text-slate-400 leading-normal pt-1">
+                        Click any empty cell to place your selected mirror, or click a placed tile on your turn to rotate it 90 degrees.
+                    </p>
                 </div>
 
             </div>
 
             <!-- Board Area -->
             <div class="lg:col-span-3 flex flex-col items-center justify-center">
-                <div class="arcade-frame bg-slate-950 p-4 rounded-2xl relative w-full flex flex-col items-center shadow-2xl">
+                <div class="arcade-frame p-6 relative w-full flex flex-col items-center">
                     
-                    <!-- Turn Status Toast -->
-                    <div class="mb-3 px-4 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-mono text-slate-300 flex items-center gap-2">
-                        <span>Current Turn:</span>
+                    <!-- Turn Status Badge -->
+                    <div class="mb-4 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-slate-300 flex items-center gap-2">
+                        <span class="text-slate-400">Current Turn:</span>
                         <span id="turn-indicator" class="font-bold text-cyan-400">Player 1 (Cyan)</span>
                     </div>
 
                     <!-- Canvas Board -->
-                    <canvas id="boardCanvas" width="560" height="560" class="rounded-xl border border-slate-800/80 cursor-pointer shadow-inner bg-[#030712]"></canvas>
+                    <canvas id="boardCanvas" width="560" height="560" class="rounded-xl border border-white/[0.08] cursor-pointer bg-[#050811] shadow-2xl"></canvas>
 
                     <!-- Bottom Bar -->
-                    <div class="mt-3 flex items-center justify-between w-full max-w-[560px] text-[11px] text-slate-400 font-mono">
-                        <span>Click empty tile to place mirror</span>
-                        <span>Click placed tile to rotate</span>
+                    <div class="mt-4 flex items-center justify-between w-full max-w-[560px] text-[11px] text-slate-400 font-mono">
+                        <span>Click empty tile to place</span>
+                        <span>Click placed mirror to rotate</span>
                         <span class="text-emerald-400">● 6 Power Crystals</span>
                     </div>
                 </div>
@@ -155,20 +145,17 @@
 
 {% block extra_scripts %}
 <script>
-// ChromaTiles Game Engine
 const canvas = document.getElementById('boardCanvas');
 const ctx = canvas.getContext('2d');
 
 const GRID_SIZE = 8;
 const CELL_SIZE = 560 / GRID_SIZE; // 70px
 
-let currentTurn = 1; // 1 = Cyan (Player 1), 2 = Amber (Player 2 or Bot)
+let currentTurn = 1;
 let scores = { 1: 0, 2: 0 };
-let activeTileType = 'mirror_diag1'; // 'mirror_diag1' (╱) or 'mirror_diag2' (╲)
+let activeTileType = 'mirror_diag1';
 let gameOver = false;
 
-// Board representation
-// null or { type: 'mirror', dir: 1 (╱) or 2 (╲), owner: 1 or 2 }
 let board = [];
 let crystals = [
     { r: 2, c: 2, hitBy: [] },
@@ -187,7 +174,6 @@ function initBoard() {
             board[r][c] = null;
         }
     }
-    // Pre-place a couple of neutral prisms for tactical flavor
     board[1][4] = { type: 'mirror', dir: 1, owner: 0 };
     board[6][3] = { type: 'mirror', dir: 2, owner: 0 };
 }
@@ -195,12 +181,12 @@ function initBoard() {
 function selectTileType(type) {
     activeTileType = type;
     document.querySelectorAll('.tile-select-btn').forEach(b => {
-        b.classList.remove('active-tile', 'border-indigo-500', 'bg-indigo-950/40');
-        b.classList.add('border-slate-800', 'bg-slate-900/40');
+        b.classList.remove('border-brand-500', 'bg-brand-500/10');
+        b.classList.add('border-white/[0.08]', 'bg-white/[0.02]');
     });
     const btn = (type === 'mirror_diag1') ? document.getElementById('btn-mirror1') : document.getElementById('btn-mirror2');
-    btn.classList.add('active-tile', 'border-indigo-500', 'bg-indigo-950/40');
-    btn.classList.remove('border-slate-800', 'bg-slate-900/40');
+    btn.classList.add('border-brand-500', 'bg-brand-500/10');
+    btn.classList.remove('border-white/[0.08]', 'bg-white/[0.02]');
 }
 
 function resetGame() {
@@ -212,9 +198,6 @@ function resetGame() {
     renderBoard();
 }
 
-// Ray Tracing Laser System
-// Emitter 1: (0, 0), shooting RIGHT
-// Emitter 2: (7, 7), shooting LEFT
 function traceLaser(emitter) {
     const rayPath = [];
     let r = emitter.r;
@@ -230,7 +213,6 @@ function traceLaser(emitter) {
         const centerPoint = { r: r + 0.5, c: c + 0.5 };
         rayPath.push(centerPoint);
 
-        // Check if there is a crystal at (r, c)
         for (const cry of crystals) {
             if (cry.r === r && cry.c === c) {
                 if (!cry.hitBy.includes(emitter.owner)) {
@@ -239,23 +221,14 @@ function traceLaser(emitter) {
             }
         }
 
-        // Check mirror in current cell
         const tile = board[r][c];
         if (tile && tile.type === 'mirror') {
             if (tile.dir === 1) { // ╱
-                // Right (0, 1) -> Up (-1, 0)
-                // Left (0, -1) -> Down (1, 0)
-                // Down (1, 0) -> Left (0, -1)
-                // Up (-1, 0) -> Right (0, 1)
                 const oldDr = dr;
                 const oldDc = dc;
                 dr = -oldDc;
                 dc = -oldDr;
             } else if (tile.dir === 2) { // ╲
-                // Right (0, 1) -> Down (1, 0)
-                // Left (0, -1) -> Up (-1, 0)
-                // Down (1, 0) -> Right (0, 1)
-                // Up (-1, 0) -> Left (0, -1)
                 const oldDr = dr;
                 const oldDc = dc;
                 dr = oldDc;
@@ -277,7 +250,7 @@ function traceLaser(emitter) {
 canvas.addEventListener('click', (e) => {
     if (gameOver) return;
     const mode = document.getElementById('game-mode').value;
-    if (mode === 'ai' && currentTurn === 2) return; // Wait for bot
+    if (mode === 'ai' && currentTurn === 2) return;
 
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -287,8 +260,6 @@ canvas.addEventListener('click', (e) => {
     const row = Math.floor(y / CELL_SIZE);
 
     if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE) return;
-
-    // Check if cell is an emitter cell or crystal
     if ((row === 0 && col === 0) || (row === 7 && col === 7)) return;
     if (crystals.some(cr => cr.r === row && cr.c === col)) return;
 
@@ -297,14 +268,12 @@ canvas.addEventListener('click', (e) => {
 
 function handleTurnAction(row, col) {
     if (board[row][col] === null) {
-        // Place new mirror
         board[row][col] = {
             type: 'mirror',
             dir: (activeTileType === 'mirror_diag1') ? 1 : 2,
             owner: currentTurn
         };
     } else {
-        // Rotate existing mirror
         board[row][col].dir = (board[row][col].dir === 1) ? 2 : 1;
     }
 
@@ -312,14 +281,11 @@ function handleTurnAction(row, col) {
 }
 
 function evaluateTurn() {
-    // Reset crystal hits
     crystals.forEach(c => c.hitBy = []);
 
-    // Trace both lasers
     const ray1 = traceLaser({ r: 0, c: 0, dr: 0, dc: 1, owner: 1 });
     const ray2 = traceLaser({ r: 7, c: 7, dr: 0, dc: -1, owner: 2 });
 
-    // Compute scores
     let p1RoundPoints = crystals.filter(c => c.hitBy.includes(1)).length;
     let p2RoundPoints = crystals.filter(c => c.hitBy.includes(2)).length;
 
@@ -329,28 +295,25 @@ function evaluateTurn() {
     updateScoreUI();
     renderBoard();
 
-    // Check win condition
     if (scores[1] >= 10 || scores[2] >= 10) {
         gameOver = true;
         const winner = scores[1] >= 10 ? "Player 1 (Cyan)" : "Player 2 / AI (Amber)";
         setTimeout(() => {
-            alert(`Game Over! ${winner} has reached 10 Energy Sparks and won the match!`);
-        }, 150);
+            alert(`Victory! ${winner} captured 10 Energy Sparks and won the match.`);
+        }, 120);
         return;
     }
 
-    // Switch turn
     currentTurn = (currentTurn === 1) ? 2 : 1;
     updateScoreUI();
 
     const mode = document.getElementById('game-mode').value;
     if (mode === 'ai' && currentTurn === 2 && !gameOver) {
-        setTimeout(botMakeMove, 600);
+        setTimeout(botMakeMove, 500);
     }
 }
 
 function botMakeMove() {
-    // Greedy heuristic bot: test possible positions to maximize laser 2 crystal hits
     let bestMove = null;
     let maxHits = -1;
 
@@ -364,7 +327,6 @@ function botMakeMove() {
             for (const dir of [1, 2]) {
                 board[r][c] = { type: 'mirror', dir, owner: 2 };
                 
-                // Test hits
                 crystals.forEach(cr => cr.hitBy = []);
                 traceLaser({ r: 7, c: 7, dr: 0, dc: -1, owner: 2 });
                 const hits = crystals.filter(cr => cr.hitBy.includes(2)).length;
@@ -382,7 +344,6 @@ function botMakeMove() {
     if (bestMove) {
         board[bestMove.r][bestMove.c] = { type: 'mirror', dir: bestMove.dir, owner: 2 };
     } else {
-        // Fallback random
         board[3][4] = { type: 'mirror', dir: 1, owner: 2 };
     }
 
@@ -400,59 +361,49 @@ function updateScoreUI() {
     if (currentTurn === 1) {
         turnText.textContent = "Player 1 (Cyan)";
         turnText.className = "font-bold text-cyan-400";
-        p1Card.className = "p-3.5 rounded-xl border-2 border-cyan-500 bg-cyan-950/40 mb-3 flex items-center justify-between";
-        p2Card.className = "p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 mb-4 flex items-center justify-between";
+        p1Card.className = "p-3 rounded-xl border border-cyan-500/50 bg-cyan-950/30 flex items-center justify-between";
+        p2Card.className = "p-3 rounded-xl border border-white/[0.06] bg-slate-900/30 flex items-center justify-between";
     } else {
         const mode = document.getElementById('game-mode').value;
         turnText.textContent = (mode === 'ai') ? "Bot Optic-1 (Thinking...)" : "Player 2 (Amber)";
         turnText.className = "font-bold text-amber-400";
-        p2Card.className = "p-3.5 rounded-xl border-2 border-amber-500 bg-amber-950/40 mb-4 flex items-center justify-between";
-        p1Card.className = "p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 mb-3 flex items-center justify-between";
+        p2Card.className = "p-3 rounded-xl border border-amber-500/50 bg-amber-950/30 flex items-center justify-between";
+        p1Card.className = "p-3 rounded-xl border border-white/[0.06] bg-slate-900/30 flex items-center justify-between";
     }
 }
 
-// Drawing routines
 function renderBoard() {
     ctx.clearRect(0, 0, 560, 560);
 
-    // Grid lines
     for (let r = 0; r < GRID_SIZE; r++) {
         for (let c = 0; c < GRID_SIZE; c++) {
             const x = c * CELL_SIZE;
             const y = r * CELL_SIZE;
 
-            ctx.fillStyle = ((r + c) % 2 === 0) ? '#090d16' : '#040711';
+            ctx.fillStyle = ((r + c) % 2 === 0) ? '#090d16' : '#050811';
             ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
 
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
         }
     }
 
-    // Draw Emitters
-    // Emitter 1 (Top-Left)
+    // Emitters
     ctx.fillStyle = '#06b6d4';
     ctx.beginPath();
-    ctx.arc(CELL_SIZE * 0.5, CELL_SIZE * 0.5, 14, 0, Math.PI * 2);
+    ctx.arc(CELL_SIZE * 0.5, CELL_SIZE * 0.5, 12, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#22d3ee';
-    ctx.lineWidth = 3;
-    ctx.stroke();
 
-    // Emitter 2 (Bottom-Right)
     ctx.fillStyle = '#f59e0b';
     ctx.beginPath();
-    ctx.arc(CELL_SIZE * (GRID_SIZE - 0.5), CELL_SIZE * (GRID_SIZE - 0.5), 14, 0, Math.PI * 2);
+    ctx.arc(CELL_SIZE * (GRID_SIZE - 0.5), CELL_SIZE * (GRID_SIZE - 0.5), 12, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#fbbf24';
-    ctx.lineWidth = 3;
-    ctx.stroke();
 
-    // Draw Laser Beams
+    // Laser rays
     drawRay(traceLaser({ r: 0, c: 0, dr: 0, dc: 1, owner: 1 }), '#06b6d4');
     drawRay(traceLaser({ r: 7, c: 7, dr: 0, dc: -1, owner: 2 }), '#f59e0b');
 
-    // Draw Crystals
+    // Crystals
     for (const cry of crystals) {
         const cx = (cry.c + 0.5) * CELL_SIZE;
         const cy = (cry.r + 0.5) * CELL_SIZE;
@@ -464,28 +415,27 @@ function renderBoard() {
 
         if (isPowered) {
             ctx.shadowColor = '#10b981';
-            ctx.shadowBlur = 18;
+            ctx.shadowBlur = 14;
             ctx.fillStyle = '#34d399';
         } else {
             ctx.fillStyle = '#064e3b';
         }
 
-        // Diamond crystal shape
         ctx.beginPath();
-        ctx.moveTo(0, -16);
-        ctx.lineTo(16, 0);
-        ctx.lineTo(0, 16);
-        ctx.lineTo(-16, 0);
+        ctx.moveTo(0, -14);
+        ctx.lineTo(14, 0);
+        ctx.lineTo(0, 14);
+        ctx.lineTo(-14, 0);
         ctx.closePath();
         ctx.fill();
 
         ctx.strokeStyle = isPowered ? '#a7f3d0' : '#047857';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
         ctx.restore();
     }
 
-    // Draw Mirror Tiles
+    // Mirror Tiles
     for (let r = 0; r < GRID_SIZE; r++) {
         for (let c = 0; c < GRID_SIZE; c++) {
             const tile = board[r][c];
@@ -493,10 +443,10 @@ function renderBoard() {
 
             const cx = (c + 0.5) * CELL_SIZE;
             const cy = (r + 0.5) * CELL_SIZE;
-            const half = CELL_SIZE * 0.38;
+            const half = CELL_SIZE * 0.36;
 
             ctx.save();
-            ctx.lineWidth = 6;
+            ctx.lineWidth = 5;
             ctx.lineCap = 'round';
 
             if (tile.owner === 1) ctx.strokeStyle = '#38bdf8';
@@ -513,11 +463,6 @@ function renderBoard() {
             }
             ctx.stroke();
 
-            // Mirror backing line
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#ffffff';
-            ctx.stroke();
-
             ctx.restore();
         }
     }
@@ -528,9 +473,9 @@ function drawRay(path, color) {
 
     ctx.save();
     ctx.strokeStyle = color;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.5;
     ctx.shadowColor = color;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 10;
 
     ctx.beginPath();
     ctx.moveTo(path[0].c * CELL_SIZE, path[0].r * CELL_SIZE);
@@ -541,7 +486,6 @@ function drawRay(path, color) {
     ctx.restore();
 }
 
-// Initial kickoff
 initBoard();
 updateScoreUI();
 renderBoard();

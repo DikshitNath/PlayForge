@@ -404,3 +404,4 @@ class Command(BaseCommand):
         ChallengeSubmission.objects.get_or_create(challenge=ch2, creation=c5)
 
         self.stdout.write(self.style.SUCCESS("Database seeded successfully with imaginative toys and games!"))
+
